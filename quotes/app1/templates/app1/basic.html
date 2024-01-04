@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block tittle%}{%endblock%}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+{%load static%}
+<body>
+
+<!-- <h1 class="text-danger text-center  " id="loginInfo" ><marquee direction=""></marquee>sth</marquee></h1> -->
+<div class="alert alert-primary alert-dismissible fade show" role="alert" id="liveAlertPlaceholder">
+  <!-- msg when wrong login credentials -->
+  <h2 class="text-danger text-center fs-5 fw-bold" id="logmsg"><span class="text-primary">Welcome To the BitWizards Haven</span></h2>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+ <script>
+ var y=document.getElementById('logmsg');
+ y.innerText = 'UserName and Password Not Matched';
+ </script>
+
+
+</script>
+
+
+  <nav class="navbar bg-light">
+    <div class="container-fluid">
+      <div class="d-flex">
+        <div> <a class="navbar-brand" href="#">
+            <img src='{%static "images/shadowMe.jpeg"%}' class="rounded-circle" alt="Logo" width="30" height="24" class="d-inline-block ">
+            <h2 class="d-inline-block"> BitWizards' Haven <br><span class="fs-6 fw-lighter">"-"Where Bits Transform inti
+                Tech magic."</span></h2>
+
+
+          </a>
+        </div>
+
+      </div>
+
+  </nav>
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-lg bg-primary sticky-top">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active  text-light" aria-current="page" href="defaulthome.php">Home</a>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle  text-light" href="#" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Our Services</a>
+            <ul class="dropdown-menu">
+              <div></div><a class="dropdown-item" href="codingtutorials.php">Coding Tutorials</a>
+              <div></div><a class="dropdown-item" href="projectshowcase.php">Projects Showcase</a>
+              <div></div><a href="techindustryinsights" class="dropdown-item">Tech Industry Insights</a>
+              <div></div><a href="newsupdate.php" class="dropdown-item">News Update</a>
+              <hr class="dropdown-divider">
+
+              <div></div><a class="dropdown-item" href="#">Problem-Solving Tips</a>
+            </ul>
+
+          <li class="nav-item">
+            <a class="nav-link  text-light" href="aboutus.php">About Us</a>
+
+          <li class="nav-item">
+            <a class="nav-link  text-light" href="contactus.php">Contact us</a>
+
+
+
+        </ul>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-light " type="submit">Search</button>
+        </form>
+        <button type="button" class="btn btn-outline-light me-md-2" data-bs-toggle="modal"
+          data-bs-target="#loginModal">{%block loginout%}{% endblock %}</button>
+        <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#signup">Sign
+          up</button>
+      </div>
+    </div>
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- signup -->
+  <div class="container">
+    <div class="modal fade" id="signup" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 text-center" id="exampleModalLabel1">Get connected with us</h1>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+
+            <form action="signupFormValidation.php" method="POST"  enctype="multipart/form-data">
+              <div class="card">
+                <div class="d-flex justify-content-center"><img class="bd-placeholder-img rounded-circle "
+                    width="140" height="140" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice"
+                    focusable="false" _mstaria-label="310609" _mstHash="27" id="preview" style="direction: ltr;"></div>
+
+               
+                    <div class="card-body">
+                  <div class="input-group mb-3">
+                    <input type="file"  name="uploadfiles" class="form-control" id="inputGroupFile03" accept="image/*"
+                      aria-describedby="inputGroupFileAddon03" aria-label="Upload" onchange="previewImage(event)">
+                  </div>
+
+               <!-- img preview script-->
+ <script>
+
+   
+function previewImage(event) {
+    const input = event.target;
+    const preview = document.getElementById('preview');
+
+    const file = input.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = '';
+    }
+}
+</script>
+
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" >Username</label>
+                <input type="text" class="form-control name" id="name" name="name"  required minlength="3">
+              </div>
+
+
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label" >Email address</label>
+                <input type="email" class="form-control email" name="email" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label"  >Password</label>
+                <input type="password"  class="form-control password" name="password" required min="8" max="12">
+              </div>
+              <div class="d-flex justify-content-center">
+                <input class="btn btn-primary mx-2" type="reset" value="Reset">
+                <button type="submit" class="btn btn-primary">Signup</button>
+              </div>
+            </form>
+
+
+
+
+
+          </div>
+          <div class="modal-footer d-flex justify-content-center">
+            <p>Already have an Account. <span class="text-primary"><a data-bs-toggle="modal"
+                  data-bs-target="#loginModal">login</a></span></p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container">
+    <div class="modal fade my-5" id="loginModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 text-center" id="exampleModalLabel1">Login in to your Account</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+
+            <form action="loginFormValid.php" method="POST">
+
+
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label" >Email address</label>
+                <input type="email" class="form-control email" name="email" required>
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label" >Password</label>
+                <input type="password" class="form-control password" name="password" required>
+              </div>
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+              </div>
+              
+
+              <div class="d-flex justify-content-center"><button type="submit" class="btn btn-primary" id="liveAlertBtn" >Login</button>
+              </div>
+            </form>
+
+
+          </div>
+          <div class="modal-footer d-flex justify-content-center">
+            <p>Don't have account. <span class="text-primary"><a data-bs-toggle="modal" data-bs-target="#signup">Sign
+                  up</a></span></p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ 
+  {% block mainContent %} 
+  {%endblock%}
+
+
+  <!-- footer -->
+
+  <footer class="bd-footer py-4 py-md-5 mt-5 bg-light">
+    <div class="container py-4 py-md-5 px-4 px-md-3">
+      <div class="row">
+        <div class="col-lg-3 mb-3">
+          <a class="d-inline-flex align-items-center mb-2 link-dark text-decoration-none" href="shadowMe.jpeg"
+            aria-label="W4U">
+            <img src='{%static "images/shadowMe.jpeg"%}' width="40" height="32" class="d-block me-2" viewBox="0 0 118 94" role="img">
+            <title>W4U</title>
+          </a>
+          <ul class="list-unstyled small text-muted">
+            <li class="mb-2">Designed and built with all the love in the world by the <a href="">W4U team</a> with the
+              help of <a href="">our contributors</a>.
+
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2 offset-lg-1 mb-3">
+          <h5>Links</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="/">Home</a>
+            <li class="mb-2"><a href="">Docs</a>
+            <li class="mb-2"><a href="">Examples</a>
+            <li class="mb-2"><a href="">Icons</a>
+            <li class="mb-2"><a href="">Themes</a>
+            <li class="mb-2"><a href="">Blog</a>
+            <li class="mb-2"><a href="">Swag Store</a>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2 mb-3">
+          <h5>Guides</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="">Getting started</a>
+            <li class="mb-2"><a href="">Starter template</a>
+            <li class="mb-2"><a href="">Webpack</a>
+            <li class="mb-2"><a href="">Parcel</a>
+            <li class="mb-2"><a href="">Vite</a>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2 mb-3">
+          <h5>Projects</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="">Bootstrap 5</a>
+            <li class="mb-2"><a href="">Bootstrap 4</a>
+            <li class="mb-2"><a href="">Icons</a>
+            <li class="mb-2"><a href="">RFS</a>
+            <li class="mb-2"><a href="">npm starter</a>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-2 mb-3">
+          <h5>Community</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="">Issues</a>
+            <li class="mb-2"><a href="">Discussions</a>
+            <li class="mb-2"><a href="">Corporate sponsors</a>
+            <li class="mb-2"><a href="">Open Collective</a>
+            <li class="mb-2"><a href="">Stack Overflow</a>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>
