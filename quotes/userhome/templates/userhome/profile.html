@@ -1,0 +1,363 @@
+{% extends 'userhome/basic.html' %}
+{%block tittle%}contactUs{%endblock%}
+{%block loginout%}LogOut{%endblock%}
+{% block mainContent%}
+{%load static%}
+
+<div class="container text-dark">
+    <div class="modal fade" id="editprofile" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 text-center" id="exampleModalLabel1">Edit Your Profile</h1>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="card">
+                <div class="d-flex justify-content-center"><img src="{{ user_info.profile_picture.url}}" class="bd-placeholder-img rounded-circle bg-primary"
+                    width="140" height="140" aria-label="Placeholder: 140x140"  preserveAspectRatio="xMidYMid slice"
+                    focusable="false" _mstaria-label="310609" _mstHash="27" style="direction: ltr;" id="preview" ></div>
+                <div class="card-body">
+                  <div class="input-group mb-3">
+                    <input type="file" class="form-control" name="profile_picture" accept="image/*"  id="inputGroupFile03"
+                      aria-describedby="inputGroupFileAddon03" aria-label="Upload" onchange="previewImage(event)">
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" placeholder="{{user.username}}" class="form-control" name="username">
+              </div>
+
+
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                <input type="email" placeholder="{{user.email}}" name="email" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputbio" class="form-label">Bio</label>
+                <input type="text"name="bio" placeholder="{{user_info.bio}}" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputwebsite" class="form-label">Website</label>
+                <input type="url" name="website" placeholder="{{user_info.website}}" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control">
+              </div>
+              <div class="d-flex justify-content-center">
+                <input class="btn btn-primary mx-2" type="reset" value="Reset">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+              </div>
+            </form>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+
+   
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('preview');
+    
+        const file = input.files[0];
+    
+        if (file) {
+            const reader = new FileReader();
+    
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            };
+    
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '';
+        }
+    }
+    </script>
+
+<div>
+  <div class="d-flex  flex-column   align-items-center ">
+       {% if user_info.profile_picture %}
+    <div class="my-5">   <img class="bd-placeholder-img rounded-circle bg-primary " width="140" height="140"   preserveAspectRatio="xMidYMid slice" focusable="false" src="{{ user_info.profile_picture.url }}" alt="Profile Picture"></div>
+      {% else %}
+      <div class="my-5">   <img class="bd-placeholder-img rounded-circle bg-primary " width="140" height="140"   preserveAspectRatio="xMidYMid slice" focusable="false"></div>
+
+{% endif %}
+    <h2 class="fw-normal d-inline-block"> {{user.username}}&#10003;</h2><span class="badge bg-primary">user</span>
+    <div>
+    Mail :<span><h5 class="d-inline-block">{{ user.email }} </h5></span>
+  </div>
+    <div>
+    Phone:<h5 class="d-inline-block">9876543212</h5>
+    </div>
+    <div>
+        bio:<p class="text-muted d-inline-block"> {{ user_info.bio }}</p>
+    </div>
+    <div>
+      <p><strong>Website:</strong> <a href="{{ user_info.website }}" target="_blank">{{ user_info.website }}</a></p>
+    </div>
+    <div>
+      <button class="btn btn-outline-primary"  data-bs-toggle="modal" data-bs-target="#editprofile">Edit Profile</button>
+    </div>
+    
+    <div><rect width="100%" height="100%" fill="#777"></rect></div>
+
+
+
+
+  </div>
+
+  <!-- footer -->
+
+</section> <!---->
+<br>
+<h2 class="my-2 border text-center">Your Posts</h2>
+
+
+{% for video in videos %}
+
+
+
+
+
+
+
+<div class="col   my-4  d-flex  justify-content-between" style="height:100vh;  overflow: hidden;">
+    
+  <div class="card shadow-sm  text-light m-5 ">
+    
+
+    <div class=" container mt-5" >
+   
+
+      <video class="container-fluid  m-5 p-0"  style="max-height: 1090;" controls>
+      
+      <source src="{{ video.video_file.url }}" type="video/mp4">
+      Your browser does not support the video tag.
+  </video>
+
+  </div>  
+ 
+
+  </div>
+
+  <div class="card-body m-5 p-5   ">
+<div class="d-flex flex-column ">
+
+
+  <hr class="my-0">
+  <div class="d-flex ">
+    <div class="d-flex align-items-center">
+      
+      <div class="me-3"><img class="rounded-circle d-inline-block m-2 " src='{%static "images/shadowMe.jpeg"%}' alt="pp" width="100%"
+          height="20">
+      </div>
+      <div class="d-flex flex-column">
+        <div>
+ 
+
+          <h6 class="fw-bold d-inline-block col-10 ">{{ video.title }}</h6>
+          
+      </div>
+        <div>
+          <h5 class=" text-primary my-0 d-inline-block">{{ video.user}}</h5> . <small class="">20k views</small> .
+          <small class="text-muted">{{ video.posted_date }}</small>
+        </div>
+      </div>
+
+    </div>
+ 
+    <!-- <i class="ps-5 ms-5"></i> -->
+    <div class="dropdown ps-5  my-2 me-2">
+      <button class="btn btn-secondary dropdown-toggle bg-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">Dont wanna see</a></li>
+        <li><a class="dropdown-item" href="#">Report</a></li>
+        <li><a class="dropdown-item" href="#">IDK</a></li>
+      </ul>
+    </div>
+  </div>
+
+
+
+  
+  <div>
+    <hr class="my-0">
+    <h5 class="card-text text-light bold pt-4 overflow text-center" style="overflow-y:scroll ; width:28vw ; height:70px;">{{video.description}}</h5>
+    <hr class="my-0">
+    <small class="text-muted ms-2"> 10k likes . 2k comment . 1k share</small>
+    <hr class="my-0">
+    <div class="d-flex align-items-center justify-content-around py-3">
+      <div><img width="30px" class="btn-outline-primary" src='{%static "images/love.png"%}' alt="sth"><div class="text-light">like</div></div>
+      <div><img width="30px" type="button" class="btn-outline-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" src='{%static "images/comment.jpeg"%}' alt=""><div>comment</div></div>
+      <div><img width="32px" class="btn-outline-primary" src='{%static "images/save.png"%}' alt="sth"><div>save</div>
+    </div>
+   
+  </div>
+</div>
+<hr class="m-1">
+<div class="modal-footer sticky-bottom  container ">
+  <div class="input-group mb-3 ">
+    <div class="me-3"><img class="rounded-circle d-inline-block m-2 " src='{%static "images/shadowMe.jpeg"%}' alt="pp"
+        width="100%" height="30"></div>
+    <input type="text" class="form-control" placeholder="Your comment"
+      aria-describedby="button-addon2">
+    <button class="btn btn-outline-primary" type="button" id="button-addon2">Comment</button>
+  </div>
+</div>
+<hr class="my-0">
+<div  style="height:510px; overflow-y: scroll;background-color: rgb(12, 11, 11); ">
+  <div class="offcanvas-body  container  text-light p-1" >
+  
+
+    <div class="modal-body my-0" ">
+              <!-- first comment -->
+              <div >
+                <div class="d-flex align-items-center my-0">
+                  <div class="me-3 my-0"><img class="rounded-circle d-inline-block m-2 " src='{%static "images/shadowMe.jpeg"%}'
+                      alt="pp" width="100%" height="20">
+                  </div>
+                  <div class="d-flex flex-column my-0">
+    
+                    <div>
+                      <h7 class=" text-primary my-0 d-inline-block">kushal1o1</h7> . <small class="">20k
+                        like</small> . <small class="text-muted">Nov 29,2022</small>
+                    </div>
+                  </div>
+    
+                </div>
+                <p class="fw-light  lh-1 m-0"> <small style="opacity:0.8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi repellendus magnam odit, id eveniet, provident animi quasi doloribus iste ad quae possimus earum labore dolorem!</small></p>
+                <div class="d-flex align-items-center">
+                  <div class=" me-5">1k <img width="15px" class="btn-outline-primary" src='{%static "images/love.png"%}' alt="sth">
+                  </div>
+                  <div>4 <img width="15px" type="button" class="btn-outline-primary" src='{%static "images/comment.jpeg"%}' alt="">
+                  </div>
+                    <hr class="text-light">
+                </div>
+              </div>
+                <hr class="text-light">
+              <!-- second comment -->
+              <div>
+                <div class="d-flex align-items-center my-0">
+                  <div class="me-3 my-0"><img class="rounded-circle d-inline-block m-2 " src='{%static "images/shadowMe.jpeg"%}'
+                      alt="pp" width="100%" height="20">
+                  </div>
+                  <div class="d-flex flex-column my-0">
+    
+                    <div>
+                      <h7 class=" text-primary my-0 d-inline-block">kushal1o1</h7> . <small class="">20k
+                        like</small> . <small class="text-muted">Nov 29,2022</small>
+                    </div>
+                  </div>
+    
+                </div>
+                <p class="fw-light  lh-1 m-0"> <small style="opacity:0.8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi repellendus magnam odit, id eveniet, provident animi quasi doloribus iste ad quae possimus earum labore dolorem!</small></p>
+                <div class="d-flex align-items-center">
+                  <div class=" me-5">1k <img width="15px" class="btn-outline-primary" src='{%static "images/love.png"%}' alt="sth">
+                  </div>
+                  <div>4 <img width="15px" type="button" class="btn-outline-primary" src='{%static "images/comment.jpeg"%}' alt="">
+                  </div>
+                    <hr class="text-light">
+                </div>
+              </div>
+                <hr class="text-light">
+              <!-- third comment -->
+              <div>
+                <div class="d-flex align-items-center my-0">
+                  <div class="me-3 my-0"><img class="rounded-circle d-inline-block m-2 " src='{%static "images/shadowMe.jpeg"%}'
+                      alt="pp" width="100%" height="20">
+                  </div>
+                  <div class="d-flex flex-column my-0">
+    
+                    <div>
+                      <h7 class=" text-primary my-0 d-inline-block">kushal1o1</h7> . <small class="">20k
+                        like</small> . <small class="text-muted">Nov 29,2022</small>
+                    </div>
+                  </div>
+    
+                </div>
+                <p class="fw-light  lh-1 m-0"> <small style="opacity:0.8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi repellendus magnam odit, id eveniet, provident animi quasi doloribus iste ad quae possimus earum labore dolorem!</small></p>
+                <div class="d-flex align-items-center">
+                  <div class=" me-5">1k <img width="15px" class="btn-outline-primary" src='{%static "images/love.png"%}' alt="sth">
+                  </div>
+                  <div>4 <img width="15px" type="button" class="btn-outline-primary" src='{%static "images/comment.jpeg"%}' alt="">
+                  </div>
+                    <hr class="text-light">
+                </div>
+              </div>
+                <hr class="text-light">
+              <!-- fourth comment -->
+              <div>
+                <div class="d-flex align-items-center my-0">
+                  <div class="me-3 my-0"><img class="rounded-circle d-inline-block m-2 " src='{%static "images/shadowMe.jpeg"%}'
+                      alt="pp" width="100%" height="20">
+                  </div>
+                  <div class="d-flex flex-column my-0">
+    
+                    <div>
+                      <h7 class=" text-primary my-0 d-inline-block">kushal1o1</h7> . <small class="">20k
+                        like</small> . <small class="text-muted">Nov 29,2022</small>
+                    </div>
+                  </div>
+    
+                </div>
+                <p class="fw-light  lh-1 m-0"> <small style="opacity:0.8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi repellendus magnam odit, id eveniet, provident animi quasi doloribus iste ad quae possimus earum labore dolorem!</small></p>
+                <div class="d-flex align-items-center">
+                  <div class=" me-5">1k <img width="15px" class="btn-outline-primary" src='{%static "images/love.png"%}' alt="sth">
+                  </div>
+                  <div>4 <img width="15px" type="button" class="btn-outline-primary" src='{%static "images/comment.jpeg"%}' alt="">
+                  </div>
+                    <hr class="text-light">
+                </div>
+              </div>
+                <hr class="text-light">
+    
+    
+            </div>
+       
+            </div>
+        
+</div>
+<hr class="my-0">
+
+
+  
+        
+    </div>
+
+
+
+  </div>
+  
+ 
+
+</div>
+ 
+
+   
+
+
+     
+
+
+    <!-- </div>
+  </div> -->
+  <hr class="my-0 text-light">
+<!-- </div> -->
+
+
+{% endfor %}
+
+
+
+{%endblock%}
