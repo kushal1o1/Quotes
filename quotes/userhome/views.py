@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes ,force_str
 from django.contrib.auth import authenticate, login, logout
-from .models import UserInfo
+from .models import Quote, UserInfo
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from .models import Video
@@ -33,32 +33,12 @@ def aboutUs(request,user_id):
 @login_required
 def userHome(request,user_id):
     user_info = get_object_or_404(UserInfo, user_id=user_id)
+    alluser_info=UserInfo.objects.all()
     videos = Video.objects.all().order_by('-posted_date')
-    if request.method == 'POST':
-        print("wrking")
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        video_file = request.FILES.get('video_file')
-        print(title,description)
-
-        if title and description and video_file:
-            # Save the video file to your desired location (e.g., MEDIA_ROOT)
-            file_path = default_storage.save(f'videos/{video_file.name}', video_file)
-
-            # Create a Video object in the database
-            video = Video.objects.create(
-                user=user_info.user,
-               
-                 # If you want to store the username in the Video model
-                title=title,
-                description=description,
-                video_file=file_path,
-                # Set additional fields accordingly
-            )
-
-
-   
-    return render(request, 'userhome/userhome.html',{'user_info': user_info ,'videos': videos})
+    allquotes = Quote.objects.all().order_by('-posted_date')
+    print(alluser_info)
+    # print(allquotes.User.UserInfo.bio)
+    return render(request, 'userhome/userhome.html',{'user_info': user_info ,'videos': videos ,'quotes':allquotes})
 
 
 @login_required
@@ -68,6 +48,8 @@ def profile(request,user_id):
     user = get_object_or_404(User, id=user_id)
     user_info = get_object_or_404(UserInfo, user_id=user_id)
     videos = Video.objects.filter(user=user_info.user).order_by('-posted_date')
+    allquotes = Quote.objects.filter(user=user_info.user).order_by('-posted_date')
+
 
     if request.method == 'POST':
         # Get data from the POST request
@@ -96,7 +78,7 @@ def profile(request,user_id):
 
         user_info.save()
         user.save()
-    return render(request, 'userhome/profile.html',{'user': user, 'user_info': user_info ,'videos': videos})
+    return render(request, 'userhome/profile.html',{'user': user, 'user_info': user_info ,'videos': videos,'quotes':allquotes})
 
 
 # Create your views here.
@@ -106,30 +88,43 @@ def profile(request,user_id):
 def landingpage(request):
     return render(request,"app1/authentication/index.html")
 
-# @login_required
-def submit_video(request,user_id):
-    print("wrking")
+
+def submit_quote(request,user_id):
+    user_info = get_object_or_404(UserInfo, user_id=user_id)
+    videos = Video.objects.all().order_by('-posted_date')
+    allquotes = Quote.objects.all().order_by('-posted_date')
+
     if request.method == 'POST':
-        print("wrking")
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        video_file = request.FILES.get('video_file')
+        if 'quotesform' in request.POST:
+            print("im on quote ")
+            quotetxt = request.POST.get('quotes')
+            if quotetxt :
+                quoteobj=Quote.objects.create(
+                 user=user_info.user,
+                 quote=quotetxt
 
-        if title and description and video_file:
-            # Save the video file to your desired location (e.g., MEDIA_ROOT)
-            file_path = default_storage.save(f'videos/{video_file.name}', video_file)
+                )
+        elif   'videoform' in request.POST:
+            print("i m on video")
+            title = request.POST.get('title')
+            description = request.POST.get('description')
+            video_file = request.FILES.get('video_file')
+            # print(title,description)
 
-            # Create a Video object in the database
-            video = Video.objects.create(
-                user=request.user,
-                username=request.user.username,  # If you want to store the username in the Video model
-                title=title,
-                description=description,
-                video_file=file_path,
-                # Set additional fields accordingly
-            )
+            if title and description and video_file:
+                # Save the video file to your desired location (e.g., MEDIA_ROOT)
+                file_path = default_storage.save(f'videos/{video_file.name}', video_file)
 
-            return redirect('mainpage')  # Redirect to a page showing the list of videos
+                # Create a Video object in the database
+                video = Video.objects.create(
+                    user=user_info.user,
+                
+                    # If you want to store the username in the Video model
+                    title=title,
+                    description=description,
+                    video_file=file_path,
+                    # Set additional fields accordingly
+                )
 
-    return render(request, 'userhome/userhome.html')
-
+    return redirect('userhome:mainpage', user_id=user_id)
+  

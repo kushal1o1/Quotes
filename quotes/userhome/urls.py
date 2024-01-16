@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from .import views
-from .views import submit_video
+# from .views import submit_video
 app_name = 'userhome'
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -15,7 +15,7 @@ urlpatterns = [
     path('mainpage/<int:user_id>/profile',views.profile,name='profile'),
     # path('signout', views.signout, name='signout'),
     path('mainpage/<int:user_id>/', views.userHome, name='mainpage'),
-    path('mainpage/<int:user_id>/submit_video/', views.submit_video, name='submit_video'),
+    path('mainpage/<int:user_id>/submit_quote/', views.submit_quote, name='submit_quote'),
 
     
 ]

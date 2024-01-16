@@ -25,3 +25,11 @@ class Video(models.Model):
     
     def __str__(self):
        return self.title
+
+class Quote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quote = models.TextField()
+    posted_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.posted_date}"
