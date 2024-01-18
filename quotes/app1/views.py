@@ -92,7 +92,7 @@ def signup(request):
         email.fail_silently = True
         email.send()
        
-        return redirect('/userHome',myuser)
+        return redirect('/',myuser)
         
         
     return render(request, "app1/authentication/index.html")

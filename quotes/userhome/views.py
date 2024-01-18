@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes ,force_str
 from django.contrib.auth import authenticate, login, logout
-from .models import Quote, UserInfo
+from .models import ImagePost, Quote, UserInfo
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from .models import Video
@@ -36,9 +36,12 @@ def userHome(request,user_id):
     alluser_info=UserInfo.objects.all()
     videos = Video.objects.all().order_by('-posted_date')
     allquotes = Quote.objects.all().order_by('-posted_date')
-    print(alluser_info)
-    # print(allquotes.User.UserInfo.bio)
-    return render(request, 'userhome/userhome.html',{'user_info': user_info ,'videos': videos ,'quotes':allquotes})
+    allimg = ImagePost.objects.all().order_by('-posted_date')
+
+
+    
+    
+    return render(request, 'userhome/userhome.html',{'user_info': user_info ,'videos': videos ,'quotes':allquotes,'imgquote':allimg})
 
 
 @login_required
@@ -49,6 +52,10 @@ def profile(request,user_id):
     user_info = get_object_or_404(UserInfo, user_id=user_id)
     videos = Video.objects.filter(user=user_info.user).order_by('-posted_date')
     allquotes = Quote.objects.filter(user=user_info.user).order_by('-posted_date')
+    allimg = ImagePost.objects.filter(user=user_info.user).order_by('-posted_date')
+
+ 
+
 
 
     if request.method == 'POST':
@@ -78,7 +85,7 @@ def profile(request,user_id):
 
         user_info.save()
         user.save()
-    return render(request, 'userhome/profile.html',{'user': user, 'user_info': user_info ,'videos': videos,'quotes':allquotes})
+    return render(request, 'userhome/profile.html',{'user': user, 'user_info': user_info ,'videos': videos,'quotes':allquotes,'imgquote':allimg})
 
 
 # Create your views here.
@@ -125,6 +132,16 @@ def submit_quote(request,user_id):
                     video_file=file_path,
                     # Set additional fields accordingly
                 )
+        elif  'imgform' in request.POST:
+            print("i m on imgform")
+            image_file = request.FILES.get('imageofquote')
+            new_image_post = ImagePost(
+            user=request.user,
+            imgfile=image_file,
+
+             )
+            new_image_post.save()
+
 
     return redirect('userhome:mainpage', user_id=user_id)
   

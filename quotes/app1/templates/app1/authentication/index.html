@@ -72,6 +72,7 @@
       </div>
     
   <!-- signup -->
+  {%load static%}
   <div class="container ">
     <div class="modal fade " id="signup" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog ">
@@ -85,15 +86,14 @@
 
             <form action="/signup" method="POST"  enctype="multipart/form-data">{% csrf_token %}
               <div class="card">
-                <div class="d-flex justify-content-center"><img class="bd-placeholder-img rounded-circle "
-                    width="140" height="140" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice"
-                    focusable="false" _mstaria-label="310609" _mstHash="27" id="preview" style="direction: ltr;"></div>
+                <div class="d-flex justify-content-center"><img  src='{%static "images/defaultpp.png"%}' class="rounded-circle "
+                    width="140" height="140"  id="preview" style="background-size: cover;" ></div>
 
                
                     <div class="card-body">
                   <div class="input-group mb-3">
                     <input type="file"  name="uploadfiles" class="form-control" id="inputGroupFile03" accept="image/*"
-                      aria-describedby="inputGroupFileAddon03" aria-label="Upload" onchange="previewImage(event)">
+                      aria-describedby="inputGroupFileAddon03" aria-label="Upload" onchange="previewImage(event)" required>
                   </div>
 
                <!-- img preview script-->
@@ -114,9 +114,8 @@ function previewImage(event) {
         };
 
         reader.readAsDataURL(file);
-    } else {
-        preview.src = '';
-    }
+    } 
+  
 }
 </script>
 
@@ -135,7 +134,7 @@ function previewImage(event) {
 
               <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label"  >Password</label>
-                <input type="password"  class="form-control password" name="password" required min="8" max="12">
+                <input type="password"  class="form-control password" name="password" required min="8" max="12" required>
               </div>
               <div class="d-flex justify-content-center">
                 <input class="btn btn-dark mx-2" type="reset" value="Reset">

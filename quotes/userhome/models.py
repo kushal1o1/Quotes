@@ -33,3 +33,11 @@ class Quote(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.posted_date}"
+    
+class ImagePost(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    imgfile = models.ImageField(upload_to='images/')
+    posted_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.posted_date}"
