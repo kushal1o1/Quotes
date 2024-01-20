@@ -84,43 +84,8 @@
           </div>
           <div class="modal-body">
 
-            <form action="/signup" method="POST"  enctype="multipart/form-data">{% csrf_token %}
-              <div class="card">
-                <div class="d-flex justify-content-center"><img  src='{%static "images/defaultpp.png"%}' class="rounded-circle "
-                    width="140" height="140"  id="preview" style="background-size: cover;" ></div>
-
-               
-                    <div class="card-body">
-                  <div class="input-group mb-3">
-                    <input type="file"  name="uploadfiles" class="form-control" id="inputGroupFile03" accept="image/*"
-                      aria-describedby="inputGroupFileAddon03" aria-label="Upload" onchange="previewImage(event)" required>
-                  </div>
-
-               <!-- img preview script-->
- <script>
-
-   
-function previewImage(event) {
-    const input = event.target;
-    const preview = document.getElementById('preview');
-
-    const file = input.files[0];
-
-    if (file) {
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-            preview.src = e.target.result;
-        };
-
-        reader.readAsDataURL(file);
-    } 
-  
-}
-</script>
-
-                </div>
-              </div>
+            <form action="/signup" method="POST"  >{% csrf_token %}
+              
               <div class="mb-3" >
                 <label class="form-label" >Username</label>
                 <input type="text" class="form-control name" id="name" name="username"  required minlength="3">

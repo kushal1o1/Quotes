@@ -3,8 +3,14 @@
 {%block loginout%}LogOut{%endblock%}
 {% block mainContent%}
 {%load static%}
-
-<div class="container text-dark">
+<style>
+  @media (max-width: 600px) {
+    #commentmodal {
+          display: none;
+      }
+  }
+</style>
+<div class="container text-dark" >
     <div class="modal fade" id="editprofile" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -17,9 +23,17 @@
             <form method="post" enctype="multipart/form-data">
               {% csrf_token %}
               <div class="card">
-                <div class="d-flex justify-content-center"><img src="{{ user_info.profile_picture.url}}" class="bd-placeholder-img rounded-circle bg-primary"
+                <div class="d-flex justify-content-center">
+                  {% if user_info.profile_picture %}
+                  <img src="{{ user_info.profile_picture.url}}" class="bd-placeholder-img rounded-circle bg-primary"
                     width="140" height="140" aria-label="Placeholder: 140x140"  preserveAspectRatio="xMidYMid slice"
-                    focusable="false" _mstaria-label="310609" _mstHash="27" style="direction: ltr;" id="preview" ></div>
+                    focusable="false" _mstaria-label="310609" _mstHash="27" style="direction: ltr;" id="preview" >
+                    {% else %}
+                    <img src="" class="bd-placeholder-img rounded-circle bg-primary"
+                    width="140" height="140" aria-label="Placeholder: 140x140"  preserveAspectRatio="xMidYMid slice"
+                    focusable="false" _mstaria-label="310609" _mstHash="27" style="direction: ltr;" id="preview" >
+
+                    {% endif %}</div>
                 <div class="card-body">
                   <div class="input-group mb-3">
                     <input type="file" class="form-control" name="profile_picture" accept="image/*"  id="inputGroupFile03"
@@ -39,7 +53,7 @@
               </div>
               <div class="mb-3">
                 <label for="exampleInputbio" class="form-label">Bio</label>
-                <input type="text"name="bio" placeholder="{{user_info.bio}}" class="form-control">
+                <textarea type="text"name="bio" placeholder="{{user_info.bio}}" class="form-control"  ></textarea>
               </div>
               <div class="mb-3">
                 <label for="exampleInputwebsite" class="form-label">Website</label>
@@ -85,23 +99,27 @@
     </script>
 
 <div>
-  <div class="d-flex  flex-column   align-items-center ">
-       {% if user_info.profile_picture %}
+  <div class="d-flex  flex-row fs-4 flex-wrap" style="font-style: oblique;">
+    <div class="m-5">
+    {% if user_info.profile_picture %}
     <div class="my-5">   <img class="bd-placeholder-img rounded-circle bg-primary " width="140" height="140"   preserveAspectRatio="xMidYMid slice" focusable="false" src="{{ user_info.profile_picture.url }}" alt="Profile Picture"></div>
       {% else %}
       <div class="my-5">   <img class="bd-placeholder-img rounded-circle bg-primary " width="140" height="140"   preserveAspectRatio="xMidYMid slice" focusable="false"></div>
 
 {% endif %}
-    <h2 class="fw-normal d-inline-block"> {{user.username}}&#10003;</h2><span class="badge bg-primary">user</span>
+</div>
+<div class="d-flex  flex-column  justify-content-center " >
+    <strong><h2 class="fw-bold d-inline-block"> {{user.username}}&#10003;</h2></strong>
     <div>
-    Mail :<span><h5 class="d-inline-block">{{ user.email }} </h5></span>
+      <div  style="width:80vw ;overflow: hidden;">
+        <pre class="text-bolder fs-5  d-inline-block pt-2" style="width:100%; overflow-x:auto;">-"{{ user_info.bio }}"</pre>
+         </div>
+      <strong> Mail :</strong><span><h5 class="d-inline-block">{{ user.email }} </h5></span>
   </div>
     <div>
-    Phone:<h5 class="d-inline-block">9876543212</h5>
+   
     </div>
-    <div>
-        bio:<p class="text-muted d-inline-block"> {{ user_info.bio }}</p>
-    </div>
+ 
     <div>
       <p><strong>Website:</strong> <a href="{{ user_info.website }}" target="_blank">{{ user_info.website }}</a></p>
     </div>
@@ -112,7 +130,7 @@
     <div><rect width="100%" height="100%" fill="#777"></rect></div>
 
 
-
+  </div>
 
   </div>
 
@@ -130,8 +148,9 @@
           <hr class="text-light">
             <div class="d-flex md-2">
           <div class="d-flex align-items-center mb-3">
-            <div class="me-3"><img class="rounded-circle d-inline-block m-2 " src="{{ user_info.profile_picture.url}}" alt="pp" width="100%"
-                height="50">
+            <div class="me-3">
+              {% if user_info.profile_picture %}<img class="rounded-circle d-inline-block m-2 " src="{{ user_info.profile_picture.url}}" alt="pp" width="100%"
+                height="50">{% endif %}
             </div>
             <div class="d-flex flex-column">
               <h5 class=" text-primary my-0 d-inline-block">{{ quote.user}}</h5> 
@@ -166,10 +185,10 @@
     
         <div class="card-body">
     
-<br><p class="card-text  d-inline-block fs-sm-5 fs-md-2 fs-lg-1 fs-xl-1  "> <pre>{{ quote.quote }}</pre></p><br>
+<br><p class="card-text  d-inline-block  "> <pre class="fs-5" style="font-style: oblique;">{{ quote.quote }}</pre></p><br>
      
     
-          <small class="text-muted ms-2 mt-3"> 10k likes . 2k comment . 1k share</small>
+          <small class="text-muted ms-2 mt-3" style="font-style: oblique;"> 10k likes . 2k comment . 1k share</small>
           <hr class="my-0">
           <div class="d-flex align-items-center justify-content-around py-3">
             <div><img width="20px" class="btn-outline-primary" src='{%static "images/love.png"%}' alt="sth"></div>
@@ -302,8 +321,9 @@
                 
                   <div class="modal-footer sticky-bottom  container ">
                     <div class="input-group mb-3 ">
-                      <div class="me-3"><img class="rounded-circle d-inline-block m-2 " src="{{ user_info.profile_picture.url}}" alt="pp"
-                          width="100%" height="25"></div>
+                      <div class="me-3">{% if user_info.profile_picture %}
+                        <img class="rounded-circle d-inline-block m-2" src="{{ user_info.profile_picture.url }}" alt="pp" width="100%" height="25">
+                    {% endif %}</div>
                       <input type="text" class="form-control" placeholder="Your comment"
                         aria-describedby="button-addon2">
                       <button class="btn btn-outline-primary" type="button" id="button-addon2">Comment</button>
@@ -369,7 +389,7 @@
           </div>
     
     
-          <small class="text-muted ms-2 mt-3"> 10k likes . 2k comment . 1k share</small>
+          <small class="text-muted ms-2 mt-3" style="font-style: oblique;"> 10k likes . 2k comment . 1k share</small>
           <hr class="my-0">
           <div class="d-flex align-items-center justify-content-around  py-3 ">
             <div><img width="20px" class="btn-outline-primary" src='{%static "images/love.png"%}' alt="sth"></div>
@@ -502,8 +522,8 @@
                 
                   <div class="modal-footer sticky-bottom  container ">
                     <div class="input-group mb-3 ">
-                      <div class="me-3"><img class="rounded-circle d-inline-block m-2 " src="{{ user_info.profile_picture.url}}" alt="pp"
-                          width="100%" height="25"></div>
+                      <div class="me-3">{% if user_info.profile_picture %}<img class="rounded-circle d-inline-block m-2 " src="{{ user_info.profile_picture.url}}" alt="pp" width="100%"
+                        height="50">{% endif %}</div>
                       <input type="text" class="form-control" placeholder="Your comment"
                         aria-describedby="button-addon2">
                       <button class="btn btn-outline-primary" type="button" id="button-addon2">Comment</button>
@@ -529,7 +549,7 @@
 
 
 
-<div class="col   my-4  d-flex  justify-content-between" style="height:100vh;  overflow: hidden;">
+<div class="col   my-4  d-flex" style="height:100vh;  overflow: hidden;">
     
   <div class="card shadow-sm  text-light m-5 ">
     
@@ -537,14 +557,22 @@
     <div class=" container mt-5" >
    
 
-      <video class="container-fluid  m-5 p-0"  style="max-height: 1090;" controls>
+      <video class="container-fluid  m-5 p-0"  style="max-height: 1090;"  controls onmouseover="playVideo(this)" onmouseout="pauseVideo(this)">
       
       <source src="{{ video.video_file.url }}" type="video/mp4">
       Your browser does not support the video tag.
   </video>
 
   </div>  
- 
+  <script>
+    function playVideo(videoElement) {
+        videoElement.play();
+    }
+
+    function pauseVideo(videoElement) {
+        videoElement.pause();
+    }
+</script>
 
   </div>
 
@@ -556,8 +584,8 @@
   <div class="d-flex ">
     <div class="d-flex align-items-center">
       
-      <div class="me-3"><img class="rounded-circle d-inline-block m-2 " src="{{ user_info.profile_picture.url}}" alt="pp" width="100%"
-          height="20">
+      <div class="me-3">{% if user_info.profile_picture %}<img class="rounded-circle d-inline-block m-2 " src="{{ user_info.profile_picture.url}}" alt="pp" width="100%"
+        height="20">{% endif %}
       </div>
       <div class="d-flex flex-column">
         <div>
@@ -618,7 +646,7 @@
   <div class="offcanvas-body  container  text-light p-1" >
   
 
-    <div class="modal-body my-0" ">
+    <div class="modal-body my-0" id="commentmodal" >
               <!-- first comment -->
               <div >
                 <div class="d-flex align-items-center my-0">
@@ -722,7 +750,6 @@
     
     
             </div>
-       
             </div>
         
 </div>

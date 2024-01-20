@@ -41,7 +41,9 @@ def signup(request):
         username = request.POST['username']
         email = request.POST['email']
         pass1 = request.POST['password']
-        
+
+
+
         
         if User.objects.filter(username=username):
             messages.error(request, "Username already exist! Please try some other username.")
@@ -111,7 +113,7 @@ def activate(request,uidb64,token):
         myuser.save()
         login(request,myuser)
         messages.success(request, "Your Account has been activated!!")
-        return redirect("app1/authentication/index.html")
+        return redirect("/")
     else:
         return render(request,'activation_failed.html')
 
