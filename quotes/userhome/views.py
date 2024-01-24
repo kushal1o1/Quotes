@@ -17,10 +17,11 @@ from .models import Video
 # from . tokens import generate_token
 # def index(request):
 #     return render(request, 'app1/index.html')
-
+@login_required
 def contactUs(request,user_id):
     return render(request, 'userhome/contactus.html')
 
+@login_required
 def aboutUs(request,user_id):
     return render(request, 'userhome/aboutus.html')
 
@@ -95,7 +96,7 @@ def profile(request,user_id):
 def landingpage(request):
     return render(request,"app1/authentication/index.html")
 
-
+@login_required
 def submit_quote(request,user_id):
     user_info = get_object_or_404(UserInfo, user_id=user_id)
     videos = Video.objects.all().order_by('-posted_date')

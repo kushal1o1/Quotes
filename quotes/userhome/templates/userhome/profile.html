@@ -1,15 +1,9 @@
 {% extends 'userhome/basic.html' %}
-{%block tittle%}contactUs{%endblock%}
+{%block tittle%}Quote profile{%endblock%}
 {%block loginout%}LogOut{%endblock%}
 {% block mainContent%}
 {%load static%}
-<style>
-  @media (max-width: 600px) {
-    #commentmodal {
-          display: none;
-      }
-  }
-</style>
+
 <div class="container text-dark" >
     <div class="modal fade" id="editprofile" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
@@ -544,11 +538,6 @@
 {% for video in videos %}
 
 
-
-
-
-
-
 <div class="col   my-4  d-flex" style="height:100vh;  overflow: hidden;">
     
   <div class="card shadow-sm  text-light m-5 ">
@@ -775,10 +764,7 @@
      
 
 
-    <!-- </div>
-  </div> -->
   <hr class="my-0 text-light">
-<!-- </div> -->
 
 
 {% endfor %}

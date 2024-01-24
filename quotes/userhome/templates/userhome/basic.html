@@ -79,14 +79,14 @@
             <a class="nav-link dropdown-toggle  text-light" href="#" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
               Upload Quotes</a>
-            <ul class="dropdown-menu" style="background-color: black;">
+            <ul class="dropdown-menu" style="background-color: black;font-style: oblique;">
 
 
-              <p class="text-center"><button class="btn btn-outline-light rounded-pill   " data-bs-toggle="modal" data-bs-target="#addarticle">ADD VIDEO</button></p>
+              <p class="text-center" ><button class="btn btn-outline-light rounded-pill  "  data-bs-toggle="modal" data-bs-target="#addarticle">Add video</button></p>
               <hr class="dropdown-divider">
-              <p class="text-center"><button class="btn btn-outline-light rounded-pill " data-bs-toggle="modal" data-bs-target="#addquote">ADD QUOTES</button></p>
+              <p class="text-center"><button class="btn btn-outline-light rounded-pill " data-bs-toggle="modal" data-bs-target="#addquote">Add quotes</button></p>
               <hr class="dropdown-divider">
-              <p class="text-center"><button class="btn btn-outline-light rounded-pill " data-bs-toggle="modal" data-bs-target="#addimg">ADD IMAGES</button></p>
+              <p class="text-center"><button class="btn btn-outline-light rounded-pill " data-bs-toggle="modal" data-bs-target="#addimg">Add images</button></p>
 
               <hr class="dropdown-divider">
             </ul>
@@ -122,150 +122,117 @@
 
 
 <div class="container ">
+  <!-- Modal -->
+<div class="modal fade text-dark" id="addarticle" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Upload your article</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <video src='{%static "images/defaultvideo.mp4"%}' width="100%" autoplay></video>
+      <form method="post" enctype="multipart/form-data" action="submit_quote/">
+        {% csrf_token %}
+      <div class="mb-3">
+        <label for="formFile" class="form-label">Add your Article</label>
+        <input class="form-control" type="file" name="video_file" accept="video/*" id="formFile">
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleInputtittle" class="form-label" autocomplete="off">Tittle</label>
+        <input type="text" class="form-control" id="exampleInputtittle" aria-describedby="Help" name="title" required>
+             </div>
+
+             <div class="mb-3">
+              <label for="exampleInputcategory" class="form-label">Category</label>
+             <select class="form-select" aria-label="Default select example">
+              <option selected class=" bg-primary">Coding</option>
+              <option value="1">Education</option>
+              <option value="2">News</option>
+              <option value="3">Project showcase</option>
+
+            </select>
+          </div>
+
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea2" class="form-label" autocomplete="off">Description</label>
+        <textarea class="form-control" id="exampleFormControlTextarea2" rows="3" name="description"></textarea>
+      </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary" name="videoform">Upload</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade text-dark" id="addquote" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Upload your Quotes</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="d-flex justify-content-center"><img src='{%static "images/defaultwrittenquote.jpg"%}' class=""
+          width="100%" height="300px"  style="direction: ltr;background-size: contain;" id="preview" ></div>
+
+      <form method="post" name="form" action="submit_quote/">
+        {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">Quote</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="8" name="quotes" autocomplete="off"></textarea>
+      </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearForm()">Cancel</button>
+        <button type="submit" class="btn btn-primary" name="quotesform" onclick="clearForm()">Upload</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade text-dark" id="addimg" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Upload your QuotesImage</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+      <form method="post" name="form" action="submit_quote/" enctype="multipart/form-data">
+      {% csrf_token %}
+        <div class="d-flex justify-content-center">
+          <img  id="preview1" src='{%static "images/defaultquote.jpg"%}' class="bd-placeholder-img  bg-primary"
+          width="100%" height="auto" aria-label="Placeholder: 140x140"  preserveAspectRatio="xMidYMid slice"
+          focusable="false" _mstaria-label="310609" _mstHash="27" style="direction: ltr;" >
+        </div>
+
+      <div class="mb-3">
+        <label for="exampleFormControlimg" class="form-label">Image:</label>
+        <input type="file"  name="imageofquote" required accept="image/*"  onchange="previewImage(event)">
+      </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cancel</button>
+        <button type="submit" class="btn btn-primary" name="imgform" >Upload</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
   {%block mainContent %}{%endblock%}
 </div>
-
-
-
-
-
-
-
-
-
-
-  <!-- signup -->
-  <div class="container ">
-    <div class="modal fade " id="signup" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog ">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5 text-center" id="exampleModalLabel1">Get connected with us</h1>
-
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-
-            <form action="/signup" method="POST"  enctype="multipart/form-data">{% csrf_token %}
-              <div class="card">
-                <div class="d-flex justify-content-center"><img class="bd-placeholder-img rounded-circle "
-                    width="140" height="140" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice"
-                    focusable="false" _mstaria-label="310609" _mstHash="27" id="preview" style="direction: ltr;"></div>
-
-               
-                    <div class="card-body">
-                  <div class="input-group mb-3">
-                    <input type="file"  name="uploadfiles" class="form-control" id="inputGroupFile03" accept="image/*"
-                      aria-describedby="inputGroupFileAddon03" aria-label="Upload" onchange="previewImage(event)">
-                  </div>
-
-               <!-- img preview script-->
- <script>
-
-   
-function previewImage(event) {
-    const input = event.target;
-    const preview = document.getElementById('preview');
-
-    const file = input.files[0];
-
-    if (file) {
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-            preview.src = e.target.result;
-        };
-
-        reader.readAsDataURL(file);
-    } else {
-        preview.src = '';
-    }
-}
-</script>
-
-                </div>
-              </div>
-              <div class="mb-3" >
-                <label class="form-label" >Username</label>
-                <input type="text" class="form-control name" id="name" name="username"  required minlength="3">
-              </div>
-
-
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label" >Email address</label>
-                <input type="email" class="form-control email" name="email" required>
-              </div>
-
-              <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label"  >Password</label>
-                <input type="password"  class="form-control password" name="password" required min="8" max="12">
-              </div>
-              <div class="d-flex justify-content-center">
-                <input class="btn btn-dark mx-2" type="reset" value="Reset">
-                <button type="submit" class="btn btn-dark">Signup</button>
-              </div>
-            </form>
-
-
-
-
-
-          </div>
-          <div class="modal-footer d-flex justify-content-center">
-            <p>Already have an Account. <span class="text-dark"><a data-bs-toggle="modal"
-                  data-bs-target="#loginModal">login</a></span></p>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="container">
-    <div class="modal my-5 " id="loginModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5 text-center" id="exampleModalLabel1">Login in to your Account</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-
-            <form action="/signin" method="POST">
-              {% csrf_token %}
-
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label" >Email address</label>
-                <input type="email" class="form-control email" name="email" required>
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label" >Password</label>
-                <input type="password" class="form-control password" name="password" required>
-              </div>
-              <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Check me out</label>
-              </div>
-              
-
-              <div class="d-flex justify-content-center"><button type="submit" class="btn btn-dark" id="liveAlertBtn" >Login</button>
-              </div>
-            </form>
-
-
-          </div>
-          <div class="modal-footer d-flex justify-content-center">
-            <p>Don't have account. <span class="text-dark"><a data-bs-toggle="modal" data-bs-target="#signup">Sign
-                  up</a></span></p>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
 
 
   <!-- footer -->
@@ -274,47 +241,46 @@ function previewImage(event) {
     <div class="container py-4 py-md-5 px-4 px-md-3">
       <div class="row">
         <div class="col-lg-3 mb-3">
-          <a class="d-inline-flex align-items-center mb-2 link-dark text-decoration-none" href="shadowMe.jpeg"
-            aria-label="W4U">
-            <img src='{%static "images/shadowMe.jpeg"%}' width="40" height="32" class="d-block me-2" viewBox="0 0 118 94" role="img">
-            <title>W4U</title>
-          </a>
+          
+                  <h2 class="d-inline-block me-5" style="font-style: oblique;"> <span class="fs-1 fw-bolder">Q</span>uotes<br></h2>
+                
+      
           <ul class="list-unstyled small text-muted">
-            <li class="mb-2">Designed and built with all the love in the world by the <a href="">W4U team</a> with the
-              help of <a href="">our contributors</a>.
+            <li class="mb-2">Designed and built with all the love in the world by the <a href="#">Annonymous</a> with the
+              help of <a href="#">our contributors</a>.
 
           </ul>
         </div>
         <div class="col-6 col-lg-2 offset-lg-1 mb-3">
           <h5>Links</h5>
           <ul class="list-unstyled">
-            <li class="mb-2"><a href="/">Home</a>
-            <li class="mb-2"><a href="">Docs</a>
-            <li class="mb-2"><a href="">Examples</a>
-            <li class="mb-2"><a href="">Icons</a>
-            <li class="mb-2"><a href="">Themes</a>
-            <li class="mb-2"><a href="">Blog</a>
-            <li class="mb-2"><a href="">Swag Store</a>
+            <li class="mb-2"><a href=".">Home</a>
+            <li class="mb-2"><a href="#">Upload Videos</a>
+            <li class="mb-2"><a href="#">Upload Images</a>
+            <li class="mb-2"><a href="#">Upload Quotes</a>
+            <li class="mb-2"><a href="aboutUs">About Us</a>
+            <li class="mb-2"><a href="contactUs">Contact Us</a>
+          
           </ul>
         </div>
         <div class="col-6 col-lg-2 mb-3">
           <h5>Guides</h5>
           <ul class="list-unstyled">
-            <li class="mb-2"><a href="">Getting started</a>
-            <li class="mb-2"><a href="">Starter template</a>
-            <li class="mb-2"><a href="">Webpack</a>
-            <li class="mb-2"><a href="">Parcel</a>
-            <li class="mb-2"><a href="">Vite</a>
+            <li class="mb-2"><a href="#">Getting started</a>
+            <li class="mb-2"><a href="#"> template</a>
+            <li class="mb-2"><a href="#">lorem</a>
+            <li class="mb-2"><a href="#">lorem</a>
+            <li class="mb-2"><a href="#">lorem</a>
           </ul>
         </div>
         <div class="col-6 col-lg-2 mb-3">
-          <h5>Projects</h5>
+          <h5>Created Using</h5>
           <ul class="list-unstyled">
-            <li class="mb-2"><a href="">Bootstrap 5</a>
-            <li class="mb-2"><a href="">Bootstrap 4</a>
-            <li class="mb-2"><a href="">Icons</a>
-            <li class="mb-2"><a href="">RFS</a>
-            <li class="mb-2"><a href="">npm starter</a>
+            <li class="mb-2"><a href="">Bootstrap 5,Html</a>
+            <li class="mb-2"><a href="">Java Script</a>
+            <li class="mb-2"><a href="">Django</a>
+            <li class="mb-2"><a href="">SQlite</a>
+            <li class="mb-2"><a href=""></a>
           </ul>
         </div>
         <div class="col-6 col-lg-2 mb-3">
@@ -322,9 +288,9 @@ function previewImage(event) {
           <ul class="list-unstyled">
             <li class="mb-2"><a href="">Issues</a>
             <li class="mb-2"><a href="">Discussions</a>
-            <li class="mb-2"><a href="">Corporate sponsors</a>
-            <li class="mb-2"><a href="">Open Collective</a>
-            <li class="mb-2"><a href="">Stack Overflow</a>
+            <li class="mb-2"><a href="">sponsors</a>
+            <li class="mb-2"><a href="">Collective</a>
+            <li class="mb-2"><a href="">lorem</a>
           </ul>
         </div>
       </div>
