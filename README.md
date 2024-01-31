@@ -1,3 +1,1 @@
-# Quotes
-quoter
-quoteropenpassword
+
