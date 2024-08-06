@@ -1,5 +1,5 @@
 
-# Project Title
+# Quote
 
 This Django Python Quotes app is a web application designed to display a collection of quotes to users. It allows users to view, search, and browse through a curated selection of quotes. The app provides a simple and user-friendly interface for accessing inspirational, motivational, or thought-provoking quotes.
 
