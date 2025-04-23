@@ -104,16 +104,8 @@
           </div>
           
           <!-- Interaction Buttons -->
-          <div class="d-flex align-items-center justify-content-between py-2">
-            <button class="btn btn-interaction flex-grow-1 me-2">
-              <i class="far fa-heart me-2"></i> Like
-            </button>
-            <button class="btn btn-interaction flex-grow-1 me-2" data-bs-toggle="offcanvas" data-bs-target="#commentSection{{ forloop.counter }}" aria-controls="commentSection">
-              <i class="far fa-comment me-2"></i> Comment
-            </button>
-            <button class="btn btn-interaction flex-grow-1">
-              <i class="far fa-bookmark me-2"></i> Save
-            </button>
+          <div class="d-flex align-items-center justify-content-around py-3">
+            {% include 'userhome/components/interaction_buttons.html' with content_type='quote' content_id=quote.id %}
           </div>
         </div>
       </div>
@@ -310,20 +302,6 @@
     transform: translateY(-5px);
   }
   
-  .btn-interaction {
-    background-color: rgba(255,255,255,0.05);
-    border: none;
-    color: #fff;
-    border-radius: 30px;
-    padding: 8px 15px;
-    transition: all 0.3s ease;
-  }
-  
-  .btn-interaction:hover {
-    background-color: var(--accent-color);
-    color: #000;
-  }
-  
   .comment-item {
     border-bottom: 1px solid rgba(255,255,255,0.1);
     padding-bottom: 15px;
@@ -505,18 +483,7 @@
           <hr class="my-0">
           <!-- Interaction Buttons -->
           <div class="d-flex align-items-center justify-content-around py-3">
-            <button class="btn btn-interaction" onclick="likeVideo({{ video.id }})">
-              <img width="20px" src="{% static 'images/love.png' %}" alt="Like">
-              <div class="">Like</div>
-            </button>
-            <button class="btn btn-interaction" data-bs-toggle="offcanvas" data-bs-target="#comments-{{ video.id }}">
-              <img width="20px" src="{% static 'images/comment.jpeg' %}" alt="Comment">
-              <div>Comment</div>
-            </button>
-            <button class="btn btn-interaction" onclick="saveVideo({{ video.id }})">
-              <img width="22px" src="{% static 'images/save.png' %}" alt="Save">
-              <div>Save</div>
-            </button>
+            {% include 'userhome/components/interaction_buttons.html' with content_type='video' content_id=video.id %}
           </div>
         </div>
       </div>
@@ -953,18 +920,7 @@
     
     <!-- Interaction buttons -->
     <div class="d-flex align-items-center justify-content-around py-3">
-      <button class="btn interaction-btn" onclick="likePost({{ img.id }})">
-        <img width="20px" src="{% static 'images/love.png' %}" alt="Like">
-        <span class="ms-2 ">Like</span>
-      </button>
-      <button class="btn interaction-btn" data-bs-toggle="offcanvas" data-bs-target="#comments-offcanvas-{{ img.id }}">
-        <img width="20px" src="{% static 'images/comment.jpeg' %}" alt="Comment">
-        <span class="ms-2">Comment</span>
-      </button>
-      <button class="btn interaction-btn" onclick="savePost({{ img.id }})">
-        <img width="22px" src="{% static 'images/save.png' %}" alt="Save">
-        <span class="ms-2">Save</span>
-      </button>
+      {% include 'userhome/components/interaction_buttons.html' with content_type='image' content_id=img.id %}
     </div>
   </div>
   
@@ -1092,12 +1048,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #333; /* Dark text for light mode */
   }
   
   .interaction-btn:hover {
     transform: scale(1.1);
   }
-  
+
+  /* Icon styling for better visibility */
+  .interaction-btn img,
+  .btn-interaction img,
+  .btn-interaction-mobile img {
+    filter: brightness(0.2); /* Makes icons darker for better visibility */
+    opacity: 0.8;
+  }
+
+  .interaction-btn:hover img,
+  .btn-interaction:hover img,
+  .btn-interaction-mobile:hover img {
+    filter: brightness(0.1); /* Even darker on hover */
+    opacity: 1;
+  }
+
   /* Comments styling */
   .comments-container {
     max-height: calc(80vh - 160px);
@@ -1114,12 +1086,9 @@
     border-radius: 10px;
   }
   
-
-  
   .comment-item {
     transition: background-color 0.3s ease;
   }
-
   
   /* Animation for new comments */
   @keyframes newCommentFade {
