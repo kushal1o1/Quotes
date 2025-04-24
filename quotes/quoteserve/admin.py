@@ -10,6 +10,7 @@ import csv
 class QuoteAdmin(admin.ModelAdmin):
     list_display = ('quote_text', 'author', 'categories')
 
+
     # Define the URL for custom CSV upload page
     def get_urls(self):
         urls = super().get_urls()

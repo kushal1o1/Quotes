@@ -42,37 +42,44 @@ def aboutUs(request,user_id):
 @login_required
 def userHome(request,user_id,content):
     user_info = get_object_or_404(UserInfo, user_id=user_id)
-    all_ids = list(PreQuote.objects.values_list('id', flat=True))
-    random.shuffle(all_ids)  # Shuffle the list randomly
-
-    # Fetch Quotes by the randomized IDs
-    quotes = PreQuote.objects.filter(id__in=all_ids)
-
-    # Preserve the order after shuffle (if order matters)
-    quotes = sorted(quotes, key=lambda q: all_ids.index(q.id))
-
-    # Paginate the quotes (50 per page)
-    paginator = Paginator(quotes, 50)
-    page_number = request.GET.get('page')  # Get current page number from URL
-    page_obj = paginator.get_page(page_number)
-    alluser_info=UserInfo.objects.all()
-    if content == 'videos':
-        videos = Video.objects.all().order_by('-posted_date')
-        allquotes = None
-        allimg = None
-    elif content == 'quotes':
-        allquotes = Quote.objects.all().order_by('-posted_date')
+    query = request.GET.get('categories')
+    if query:
+        allquotes = PreQuote.objects.filter(categories__icontains=query).order_by('-posted_date')
+        paginator = Paginator(allquotes, 50)  # Paginate the quotes (50 per page)
+        page_number = request.GET.get('page')  # Get current page number from URL
+        page_obj = paginator.get_page(page_number)
         videos = None
         allimg = None
-    elif content == 'imgquote':
-        allimg = ImagePost.objects.all().order_by('-posted_date')
-        videos = None
-        allquotes = None
     else:
-        allimg = ImagePost.objects.all().order_by('-posted_date')
-        videos = Video.objects.all().order_by('-posted_date')
-        allquotes = Quote.objects.all().order_by('-posted_date')
 
+
+        alluser_info=UserInfo.objects.all()
+        if content == 'videos':
+            videos = Video.objects.all().order_by('-posted_date')
+            allquotes = None
+            allimg = None
+            page_obj = None  # Initialize page_obj for videos
+
+        elif content == 'imgquote':
+            page_obj = None  # Initialize page_obj for imgquote
+            allimg = ImagePost.objects.all().order_by('-posted_date')
+            videos = None
+            allquotes = None
+        else:
+            # all_ids = list(PreQuote.objects.values_list('id', flat=True))
+            # random.shuffle(all_ids)  # Shuffle the list randomly
+        # Fetch Quotes by the randomized IDs
+            # quotes = PreQuote.objects.filter(id__in=all_ids)
+        # Preserve the order after shuffle (if order matters)
+            # quotes = sorted(quotes, key=lambda q: all_ids.index(q.id))
+            quotes = PreQuote.objects.all().order_by('-posted_date')
+        # Paginate the quotes (50 per page)
+            paginator = Paginator(quotes, 50)
+            page_number = request.GET.get('page')  # Get current page number from URL
+            page_obj = paginator.get_page(page_number)
+            allquotes = Quote.objects.all().order_by('-posted_date')
+            videos = None
+            allimg = None
     return render(request, 'userhome/userhome.html',{'user_info': user_info ,'videos': videos ,'quotes':allquotes,'imgquote':allimg,'page_obj': page_obj})
 
 
@@ -130,17 +137,21 @@ def landingpage(request):
 @login_required
 def submit_quote(request,user_id):
     user_info = get_object_or_404(UserInfo, user_id=user_id)
-    videos = Video.objects.all().order_by('-posted_date')
-    allquotes = Quote.objects.all().order_by('-posted_date')
 
     if request.method == 'POST':
         if 'quotesform' in request.POST:
             print("im on quote ")
             quotetxt = request.POST.get('quotes')
-            if quotetxt :
-                quoteobj=Quote.objects.create(
-                 user=user_info.user,
-                 quote=quotetxt
+            author = request.POST.get('author')
+            categories = request.POST.get('categories')
+            user=request.user
+            
+            if quotetxt  :
+                PreQuote.objects.create(
+                user=user,
+                quote_text=quotetxt,
+                author=author,
+                categories=categories,
 
                 )
         elif   'videoform' in request.POST:
