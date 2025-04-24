@@ -1,91 +1,86 @@
-{% load static%}
+{% load static %}
 <!-- Quote Feed Section -->
-<div class="container">
-    <div class="row">
-      {% for quote in quotes %}
-      <div class="col-lg-8 mx-auto mb-4">
-        <div class="card quote-card shadow-lg border-0 rounded-4 quote-animation">
-          <!-- User Info Header -->
-          <div class="card-header bg-transparent border-bottom border-secondary py-3">
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="d-flex align-items-center">
-                <div class="avatar-container me-3">
-                  {% if quote.user.userinfo.profile_picture %}
-                  <img class="rounded-circle border border-2 border-accent" src="{{ quote.user.userinfo.profile_picture.url }}" alt="Profile picture" width="50" height="50">
-                  {% else %}
-                  <div class="rounded-circle  d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                    <i class="fas fa-user fs-4"></i>
-                  </div>
-                  {% endif %}
+<div class="container py-4">
+  <div class="row g-4">
+    {% for quote in quotes %}
+    <div class="col-lg-10 mx-auto">
+      <div class="card quote-card shadow-sm border-0 rounded-4 quote-animation">
+        <!-- User Info Header - Simplified layout -->
+        <div class="card-header bg-transparent border-bottom py-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <div class="me-3">
+                {% if quote.user.userinfo.profile_picture %}
+                <img class="rounded-circle border border-2" src="{{ quote.user.userinfo.profile_picture.url }}" alt="Profile picture" width="45" height="45">
+                {% else %}
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                  <i class="fas fa-user"></i>
                 </div>
-                <div>
-                  <h5 class="mb-0 fw-bold text-accent">{{ quote.user }}</h5>
-                  <small class="text-secondary">{{ quote.posted_date }}</small>
-                </div>
+                {% endif %}
               </div>
-              
-              <div class="dropdown">
-                <button class="btn btn-sm p-0 btn-link " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="fas fa-ellipsis-v fs-5"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a class="dropdown-item d-flex align-items-center" href="#"><i class="fas fa-eye-slash me-2"></i> Don't show again</a></li>
-                  <li><a class="dropdown-item d-flex align-items-center" href="#"><i class="fas fa-flag me-2"></i> Report</a></li>
-                  <li><a class="dropdown-item d-flex align-items-center" href="#"><i class="fas fa-share me-2"></i> Share quote</a></li>
-                </ul>
+              <div>
+                <h6 class="mb-0 fw-bold">{{ quote.user }}</h6>
+                <small>{{ quote.posted_date }}</small>
               </div>
-            </div>
-          </div>
-          
-          <!-- Quote Content -->
-          <div class="card-body py-4">
-            <div class="quote-content position-relative">
-              <i class="fas fa-quote-left position-absolute text-secondary" style="opacity: 0.2; font-size: 2rem; left: -10px; top: -10px;"></i>
-              <div class="ps-4 pe-4">
-                <p class="fs-5 brand-font">{{ quote.quote }}</p>
-              </div>
-              <i class="fas fa-quote-right position-absolute text-secondary" style="opacity: 0.2; font-size: 2rem; right: -10px; bottom: -10px;"></i>
-            </div>
-          </div>
-          
-          <!-- Engagement Stats -->
-          <div class="card-footer bg-transparent border-top border-secondary">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <small class="text-secondary">
-                <i class="fas fa-heart me-1 text-danger"></i> 10k likes &nbsp;&bull;&nbsp; 
-                <i class="fas fa-comment me-1 text-info"></i> 2k comments &nbsp;&bull;&nbsp;
-                <i class="fas fa-share me-1 text-success"></i> 1k shares
-              </small>
-              <small class="text-secondary">
-                <i class="fas fa-bookmark"></i>
-              </small>
             </div>
             
-            <!-- Interaction Buttons -->
-            <div class="d-flex align-items-center justify-content-around py-3">
+            <div class="dropdown">
+              <button class="btn btn-sm p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-ellipsis-h"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                <li><a class="dropdown-item d-flex align-items-center" href="#"><i class="fas fa-eye-slash me-2"></i> Hide</a></li>
+                <li><a class="dropdown-item d-flex align-items-center" href="#"><i class="fas fa-flag me-2"></i> Report</a></li>
+                <li><a class="dropdown-item d-flex align-items-center" href="#"><i class="fas fa-share me-2"></i> Share</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quote Content - Enhanced presentation -->
+        <div class="card-body py-4">
+          <div class="position-relative px-2 py-3">
+            <i class="fas fa-quote-left position-absolute" style="opacity: 0.15; font-size: 1.75rem; left: -5px; top: -10px;"></i>
+            <div class="px-4">
+              <p class="fs-5 brand-font lh-base">{{ quote.quote }}</p>
+            </div>
+            <i class="fas fa-quote-right position-absolute" style="opacity: 0.15; font-size: 1.75rem; right: -5px; bottom: -10px;"></i>
+          </div>
+        </div>
+        
+        <!-- Interaction Buttons - Streamlined -->
+        <div class="card-footer bg-transparent py-2 border-top">
+          <div class="d-flex align-items-center justify-content-between px-2">
+            <div class="d-flex gap-4">
               {% include 'userhome/components/interaction_buttons.html' with content_type='quote' content_id=quote.id %}
             </div>
           </div>
-          
-          <!-- Comments Section -->
-          {% include 'userhome/components/comments_section.html' with content_type='quote' content_id=quote.id comments=quote.comments.all %}
+        </div>
+        
+        <!-- Comments Section - Collapsible -->
+        <div class="collapse" id="comments-{{ quote.id }}">
+          <div class="card-body pt-0 pb-3 border-top">
+            {% include 'userhome/components/comments_section.html' with content_type='quote' content_id=quote.id comments=quote.comments.all %}
+          </div>
         </div>
       </div>
-      {% endfor %}
     </div>
+    {% endfor %}
   </div>
+</div>
 
-
-  <!-- No Quotes Message (shown if there are no quotes) -->
+<!-- No Quotes Message - Improved design -->
 {% if not quotes %}
-<div class="container">
+<div class="container py-5">
   <div class="row">
-    <div class="col-lg-8 mx-auto">
+    <div class="col-lg-8 col-md-10 mx-auto">
       <div class="text-center py-5">
-        <i class="fas fa-quote-right fa-5x mb-4 text-secondary"></i>
-        <h3 class=" mb-3">No quotes available</h3>
-        <p class="text-secondary mb-4">Be the first to share an inspiring quote with the community!</p>
-        <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#addquote">
+        <div class="mb-4">
+          <i class="fas fa-quote-right fa-4x" style="opacity: 0.3;"></i>
+        </div>
+        <h3 class="mb-3">Your Quote Feed is Empty</h3>
+        <p class="mb-4">Share your favorite inspirational quotes and connect with others.</p>
+        <button class="btn btn-custom rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addquote">
           <i class="fas fa-plus me-2"></i> Add Your First Quote
         </button>
       </div>
@@ -94,89 +89,6 @@
 </div>
 {% endif %}
 
-
-<style>
-    /* Additional styles for this template */
-    .hero-section {
-      position: relative;
-      background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.7)), url('{% static "images/quote-bg.jpg" %}');
-      background-size: cover;
-      background-position: center;
-      padding: 4rem 0;
-      border-radius: 15px;
-      margin: 0 1rem;
-    }
-    
-    .quote-card {
-      overflow: hidden;
-      transition: transform 0.3s ease;
-    }
-    
-    .quote-card:hover {
-      transform: translateY(-5px);
-    }
-    
-    .comment-item {
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      padding-bottom: 15px;
-    }
-    
-    .comment-item:last-child {
-      border-bottom: none;
-    }
-    
-    .comments-container {
-      max-height: calc(70vh - 180px);
-      overflow-y: auto;
-      padding-right: 10px;
-    }
-    
-    .comments-container::-webkit-scrollbar {
-      width: 5px;
-    }
-    
-    .comments-container::-webkit-scrollbar-track {
-      background: rgba(255,255,255,0.05);
-    }
-    
-    .comments-container::-webkit-scrollbar-thumb {
-      background: var(--accent-color);
-      border-radius: 5px;
-    }
-    
-    #back-to-top {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .avatar-container {
-      position: relative;
-    }
-    
-    .avatar-container::after {
-      content: '';
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      background-color: #28a745;
-      border: 2px solid #000;
-      border-radius: 50%;
-      bottom: 0;
-      right: 0;
-    }
-    
-    @media (max-width: 768px) {
-      .hero-section {
-        padding: 2rem 0;
-      }
-      
-      .offcanvas {
-        height: 90vh !important;
-      }
-    }
-  </style>
-  
 <script>
   // Show/hide back-to-top button
   window.addEventListener('scroll', function() {
@@ -202,21 +114,28 @@
     });
   });
   
-  // Add animation to quotes when they enter viewport
+  // Enhanced animation for quotes when they enter viewport
   document.addEventListener('DOMContentLoaded', function() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('show');
-          observer.unobserve(entry.target);
+          // Add slight delay between animations if multiple cards appear
+          setTimeout(() => {
+            observer.unobserve(entry.target);
+          }, 150);
         }
       });
     }, {
-      threshold: 0.1
+      threshold: 0.2,
+      rootMargin: '0px 0px -50px 0px'
     });
     
-    document.querySelectorAll('.quote-animation').forEach(quote => {
-      observer.observe(quote);
+    document.querySelectorAll('.quote-animation').forEach((quote, index) => {
+      // Add staggered observation to create cascade effect
+      setTimeout(() => {
+        observer.observe(quote);
+      }, index * 100);
     });
   });
 </script>

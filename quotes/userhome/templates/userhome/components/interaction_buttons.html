@@ -1,33 +1,23 @@
 {% load static %}
 
-<div class="interaction-buttons d-flex align-items-center justify-content-around py-3">
-  <!-- Like Button -->
+<div class="interaction-buttons d-flex align-items-center justify-content-center py-3">
+  <!-- Like Button - Icon Only -->
   <button class="btn interaction-btn" onclick="likeContent('{{ content_type }}', {{ content_id }})">
-    <img width="20px" src="{% static 'images/love.png' %}" alt="Like">
-    <span class="ms-2">Like</span>
+    <i class="fas fa-heart"></i>
   </button>
 
-  <!-- Comment Button -->
+  <!-- Comment Button - Icon Only -->
   <button class="btn interaction-btn" data-bs-toggle="offcanvas" data-bs-target="#comments-{{ content_type }}-{{ content_id }}">
-    <img width="20px" src="{% static 'images/comment.jpeg' %}" alt="Comment">
-    <span class="ms-2">Comment</span>
+    <i class="fas fa-comment"></i>
   </button>
 
-  <!-- Save Button -->
+  <!-- Save Button - Icon Only -->
   <button class="btn interaction-btn" onclick="saveContent('{{ content_type }}', {{ content_id }})">
-    <img width="22px" src="{% static 'images/save.png' %}" alt="Save">
-    <span class="ms-2">Save</span>
+    <i class="fas fa-bookmark"></i>
   </button>
 </div>
 
-<!-- Stats Display -->
-<div class="interaction-stats px-2">
-  <small class="text-muted" style="font-style: oblique;">
-    <span id="likes-count-{{ content_type }}-{{ content_id }}">0</span> likes · 
-    <span id="comments-count-{{ content_type }}-{{ content_id }}">0</span> comments · 
-    <span id="shares-count-{{ content_type }}-{{ content_id }}">0</span> shares
-  </small>
-</div>
+
 
 <style>
   /* Base styles */
@@ -38,35 +28,30 @@
 
   .interaction-btn {
     border: none;
-    transition: all 0.2s ease;
+    background-color: var(--primary-dark);
+    color: var(--primary-light);
+    transition: transform 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     background: transparent;
-    padding: 8px 16px;
-    border-radius: 20px;
-    color: var(--text-color);
+    padding: 8px;
+    border-radius: 50%;
   }
   
   .interaction-btn:hover {
-    transform: scale(1.1);
-    background: var(--hover-bg);
+    background-color: var(--primary-light);
+    transform: scale(1.2);
   }
 
-  .interaction-btn img {
-    filter: var(--icon-filter);
-    opacity: 0.8;
-    transition: all 0.2s ease;
+  .interaction-btn i {
+    font-size: 20px;
+    color: var(--primary-light);
+    transition: color 0.2s ease;
   }
 
-  .interaction-btn:hover img {
-    filter: var(--icon-hover-filter);
-    opacity: 1;
-  }
-
-  .interaction-btn span {
-    color: inherit;
-    font-weight: 500;
+  .interaction-btn:hover i {
+    color: var(--primary-dark);
   }
 
   .interaction-stats {
@@ -78,8 +63,8 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: var(--accent-color);
-    color: var(--text-color);
+    background-color: #f8f9fa;
+    color: #212529;
     padding: 10px 20px;
     border-radius: 5px;
     z-index: 1050;
@@ -102,13 +87,13 @@
     const likesCount = document.getElementById(`likes-count-${contentType}-${contentId}`);
     const currentLikes = parseInt(likesCount.textContent.replace(/[^0-9]/g, '')) + 1;
     likesCount.textContent = formatCount(currentLikes);
-    showToast(`${contentType} liked!`);
+    showToast(`Liked!`);
   }
 
   function saveContent(contentType, contentId) {
     // AJAX call to save the content
     console.log(`Saved ${contentType} ${contentId}`);
-    showToast(`${contentType} saved to your collection`);
+    showToast(`Saved to collection`);
   }
 
   function formatCount(count) {
@@ -135,4 +120,4 @@
       toast.remove();
     }, 3000);
   }
-</script> 
+</script>
