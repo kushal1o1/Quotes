@@ -26,19 +26,8 @@
       </div>
 
       <!-- Options dropdown -->
-      <div class="dropdown my-2">
-        <button class="btn btn-sm btn-primary dropdown-toggle" 
-          type="button" 
-          data-bs-toggle="dropdown" 
-          aria-expanded="false">
-          <i class="bi bi-three-dots"></i>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end">
-          <li><a class="dropdown-item" href="#"><i class="bi bi-eye-slash me-2"></i>Not interested</a></li>
-          <li><a class="dropdown-item" href="#"><i class="bi bi-flag me-2"></i>Report</a></li>
-          <li><a class="dropdown-item" href="#"><i class="bi bi-share me-2"></i>Share</a></li>
-        </ul>
-      </div>
+      {% include './components/dropbox.html'%}
+
     </div>
   </div>
 
