@@ -1,33 +1,280 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Quotes</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        header {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        .category {
+            background-color: #e9ecef;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .category:hover, .category.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .quotes-container {
+            list-style-type: none;
+            padding: 0;
+        }
+        .quote-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .quote-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .quote-author {
+            font-weight: 600;
+            color: #495057;
+        }
+        .quote-categories {
+            color: #6c757d;
+            font-style: italic;
+        }
+        .quote-actions {
+            display: flex;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+        .action-btn {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .action-btn:hover {
+            color: #007bff;
+        }
+        .action-btn i {
+            margin-right: 5px;
+        }
+        .love-count, .comment-count, .share-count {
+            margin-left: 5px;
+        }
+        .loved {
+            color: #dc3545;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 16px;
+            margin: 0 5px;
+            border-radius: 4px;
+            color: #495057;
+            text-decoration: none;
+        }
+        .pagination a {
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .pagination a:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .pagination span {
+            font-weight: 600;
+        }
+        .comment-section {
+            margin-top: 10px;
+            display: none;
+        }
+        .comment-section.active {
+            display: block;
+        }
+        .comment-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .comment-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .comment-btn:hover {
+            background-color: #0069d9;
+        }
+    </style>
 </head>
 <body>
-    <h1>Random Quotes</h1>
+    <header>
+        <h1>Inspiring Quotes Collection</h1>
+        
+        <!-- Categories -->
+        <div class="categories">
+            <div class="category active">All</div>
+            <div class="category">Motivation</div>
+            <div class="category">Success</div>
+            <div class="category">Love</div>
+            <div class="category">Happiness</div>
+            <div class="category">Wisdom</div>
+            <div class="category">Life</div>
+        </div>
+    </header>
 
-    <ul>
+    <ul class="quotes-container">
         {% for quote in page_obj %}
-            <li>
-                <strong>{{ quote.quote_text }}</strong><br>
-                — {{ quote.author }} | <em>{{ quote.categories }}</em>
-            </li>
+        <li class="quote-card">
+            <div class="quote-text">"{{ quote.quote_text }}"</div>
+            <div class="quote-author">— {{ quote.author }}</div>
+            <div class="quote-categories"><em>{{ quote.categories }}</em></div>
+            
+            <div class="quote-actions">
+                <div class="action-btn love-btn" onclick="toggleLove(this)">
+                    <i class="fas fa-heart"></i>
+                    <span>Love</span>
+                    <span class="love-count">0</span>
+                </div>
+                <div class="action-btn comment-btn" onclick="toggleComments(this)">
+                    <i class="fas fa-comment"></i>
+                    <span>Comment</span>
+                    <span class="comment-count">0</span>
+                </div>
+                <div class="action-btn share-btn" onclick="shareQuote(this)">
+                    <i class="fas fa-share"></i>
+                    <span>Share</span>
+                </div>
+            </div>
+            
+            <div class="comment-section">
+                <input type="text" class="comment-input" placeholder="Add a comment...">
+                <button class="comment-btn">Post</button>
+            </div>
+        </li>
         {% endfor %}
     </ul>
 
     <!-- Pagination Controls -->
-    <div>
+    <div class="pagination">
         {% if page_obj.has_previous %}
-            <a href="?page=1">First</a>
-            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            <a href="?page=1"><i class="fas fa-angle-double-left"></i> First</a>
+            <a href="?page={{ page_obj.previous_page_number }}"><i class="fas fa-angle-left"></i> Previous</a>
         {% endif %}
-
+        
         <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-
+        
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">Next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+            <a href="?page={{ page_obj.next_page_number }}">Next <i class="fas fa-angle-right"></i></a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last <i class="fas fa-angle-double-right"></i></a>
         {% endif %}
     </div>
+
+    <script>
+        function toggleLove(element) {
+            element.classList.toggle('loved');
+            const countElement = element.querySelector('.love-count');
+            let count = parseInt(countElement.textContent);
+            
+            if (element.classList.contains('loved')) {
+                countElement.textContent = count + 1;
+            } else {
+                countElement.textContent = Math.max(0, count - 1);
+            }
+        }
+        
+        function toggleComments(element) {
+            const quoteCard = element.closest('.quote-card');
+            const commentSection = quoteCard.querySelector('.comment-section');
+            commentSection.classList.toggle('active');
+        }
+        
+        function shareQuote(element) {
+            const quoteCard = element.closest('.quote-card');
+            const quoteText = quoteCard.querySelector('.quote-text').textContent;
+            const quoteAuthor = quoteCard.querySelector('.quote-author').textContent;
+            
+            // In a real application, this would open a share dialog
+            alert('Share this quote:\n' + quoteText + ' ' + quoteAuthor);
+        }
+        
+        // Category filtering (would be implemented with backend filtering in a real app)
+        document.querySelectorAll('.category').forEach(category => {
+            category.addEventListener('click', function() {
+                document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                // In a real implementation, this would filter quotes by category
+                // For demonstration, we're just showing a message
+                if (this.textContent !== 'All') {
+                    alert('In a real application, this would filter quotes by: ' + this.textContent);
+                }
+            });
+        });
+        
+        // Comment posting functionality
+        document.querySelectorAll('.comment-btn').forEach(btn => {
+            if (!btn.classList.contains('action-btn')) {
+                btn.addEventListener('click', function() {
+                    const commentSection = this.closest('.comment-section');
+                    const input = commentSection.querySelector('.comment-input');
+                    
+                    if (input.value.trim()) {
+                        const quoteCard = this.closest('.quote-card');
+                        const commentCountElement = quoteCard.querySelector('.comment-count');
+                        let count = parseInt(commentCountElement.textContent);
+                        commentCountElement.textContent = count + 1;
+                        
+                        alert('Comment posted: ' + input.value);
+                        input.value = '';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
