@@ -22,6 +22,7 @@ from django.core.paginator import Paginator
 #     return render(request, 'app1/index.html')
 @login_required
 def contactUs(request,user_id):
+    messages.info(request, "Welcome to the contact us page")
     user_info = get_object_or_404(UserInfo, user_id=user_id)
     return render(request, 'userhome/contactus.html',{'user_info': user_info})
 
