@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.urls import path
 from django.contrib import messages
-from .models import Quote
+from .models import PreQuote
 import csv
 
 class QuoteAdmin(admin.ModelAdmin):
@@ -28,7 +28,7 @@ class QuoteAdmin(admin.ModelAdmin):
                     next(reader)  # Skip header
                     for row in reader:
                         quote_text, author, categories = row
-                        Quote.objects.create(
+                        PreQuote.objects.create(
                             quote_text=quote_text.strip(),
                             author=author.strip(),
                             categories=categories.strip()
@@ -47,4 +47,4 @@ class QuoteAdmin(admin.ModelAdmin):
         )
 
 # Register the Quote model with the custom admin
-admin.site.register(Quote, QuoteAdmin)
+admin.site.register(PreQuote, QuoteAdmin)

@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-class Quote(models.Model):
+class PreQuote(models.Model):
     quote_text = models.TextField()  # Quote text
     author = models.CharField(max_length=255)  # Author name
     categories = models.CharField(max_length=500)  # Categories/tags

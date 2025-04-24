@@ -13,6 +13,9 @@ from .models import ImagePost, Quote, UserInfo
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from .models import Video
+from quoteserve.models import PreQuote
+import random
+from django.core.paginator import Paginator
 
 # from . tokens import generate_token
 # def index(request):
@@ -39,6 +42,19 @@ def aboutUs(request,user_id):
 @login_required
 def userHome(request,user_id,content):
     user_info = get_object_or_404(UserInfo, user_id=user_id)
+    all_ids = list(PreQuote.objects.values_list('id', flat=True))
+    random.shuffle(all_ids)  # Shuffle the list randomly
+
+    # Fetch Quotes by the randomized IDs
+    quotes = PreQuote.objects.filter(id__in=all_ids)
+
+    # Preserve the order after shuffle (if order matters)
+    quotes = sorted(quotes, key=lambda q: all_ids.index(q.id))
+
+    # Paginate the quotes (50 per page)
+    paginator = Paginator(quotes, 50)
+    page_number = request.GET.get('page')  # Get current page number from URL
+    page_obj = paginator.get_page(page_number)
     alluser_info=UserInfo.objects.all()
     if content == 'videos':
         videos = Video.objects.all().order_by('-posted_date')
@@ -57,7 +73,7 @@ def userHome(request,user_id,content):
         videos = Video.objects.all().order_by('-posted_date')
         allquotes = Quote.objects.all().order_by('-posted_date')
 
-    return render(request, 'userhome/userhome.html',{'user_info': user_info ,'videos': videos ,'quotes':allquotes,'imgquote':allimg})
+    return render(request, 'userhome/userhome.html',{'user_info': user_info ,'videos': videos ,'quotes':allquotes,'imgquote':allimg,'page_obj': page_obj})
 
 
 @login_required
