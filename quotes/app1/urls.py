@@ -18,6 +18,7 @@ urlpatterns = [
     path('activate/<uidb64>/<token>', views.activate, name='activate'),
     path('signout', views.signout, name='signout'),
     path('userhome/', include('userhome.urls'),name='userhome'),
+    path('quoteserve/', include('quoteserve.urls'),name='quoteserve'),
     
     
 
