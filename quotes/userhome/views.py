@@ -19,11 +19,13 @@ from .models import Video
 #     return render(request, 'app1/index.html')
 @login_required
 def contactUs(request,user_id):
-    return render(request, 'userhome/contactus.html')
+    user_info = get_object_or_404(UserInfo, user_id=user_id)
+    return render(request, 'userhome/contactus.html',{'user_info': user_info})
 
 @login_required
 def aboutUs(request,user_id):
-    return render(request, 'userhome/aboutus.html')
+    user_info = get_object_or_404(UserInfo, user_id=user_id)
+    return render(request, 'userhome/aboutus.html',{'user_info': user_info})
 
 
 # def mainpage(request, user_id, username, email, first_name, last_name):
@@ -44,16 +46,17 @@ def userHome(request,user_id,content):
         allimg = None
     elif content == 'quotes':
         allquotes = Quote.objects.all().order_by('-posted_date')
+        videos = None
+        allimg = None
     elif content == 'imgquote':
         allimg = ImagePost.objects.all().order_by('-posted_date')
+        videos = None
+        allquotes = None
     else:
         allimg = ImagePost.objects.all().order_by('-posted_date')
         videos = Video.objects.all().order_by('-posted_date')
         allquotes = Quote.objects.all().order_by('-posted_date')
 
-
-    
-    
     return render(request, 'userhome/userhome.html',{'user_info': user_info ,'videos': videos ,'quotes':allquotes,'imgquote':allimg})
 
 

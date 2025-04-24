@@ -1,34 +1,36 @@
-<section class=" py-4 mb-5">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-8 mx-auto text-center">
-          <h1 class="display-4 fw-bold  brand-font mb-4">
-            <span class="brand-letter">A</span>dd <span class="brand-letter">Y</span>our <span class="brand-letter">Q</span>uote
-          </h1>
-          <p class="lead mb-4">Express yourself and inspire others with your favorite quotes</p>
-          
-          <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <button class="btn btn-custom px-4 py-2" data-bs-toggle="modal" data-bs-target="#addarticle">
-              <i class="fas fa-video me-2"></i> ADD VIDEO
-            </button>
-            <button class="btn btn-custom px-4 py-2" data-bs-toggle="modal" data-bs-target="#addquote">
-              <i class="fas fa-quote-left me-2"></i> ADD QUOTES
-            </button>
-            <button class="btn btn-custom px-4 py-2" data-bs-toggle="modal" data-bs-target="#addimg">
-              <i class="fas fa-image me-2"></i> ADD IMAGES
-            </button>
-          </div>
+<!-- Category Navigation Section -->
+<section class="py-4 mb-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8 mx-auto text-center">
+        <h1 class="display-4 fw-bold brand-font mb-4">
+          <span class="brand-letter">Q</span>uote <span class="brand-letter">C</span>ategories
+        </h1>
+        <p class="lead mb-4">Browse through our collection of inspiring quotes</p>
+        
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a href="{% url 'userhome:mainpage' user_info.user_id  'videos' %}" class="btn btn-custom px-4 py-2">
+            <i class="fas fa-video me-2"></i> VIDEO QUOTES
+          </a>
+          <a href="{% url 'userhome:mainpage' user_info.user_id  'quotes' %}" class="btn btn-custom px-4 py-2">
+            <i class="fas fa-quote-left me-2"></i> TEXT QUOTES
+          </a>
+          <a href="{% url 'userhome:mainpage' user_info.user_id  'imgquote' %}" class="btn btn-custom px-4 py-2">
+            <i class="fas fa-image me-2"></i> IMAGE QUOTES
+          </a>
         </div>
       </div>
     </div>
-  </section>
-  <!-- Daily Quotes Header -->
-<div class="container">
-    <div class="position-relative mb-5">
-      <hr class="">
-      <h2 class="text-center fw-bold  brand-font position-relative">
-        <span class="position-relative px-4 ">Today's Global Quotes</span>
-      </h2>
-      <hr class="">
-    </div>
   </div>
+</section>
+
+<!-- Daily Quotes Header -->
+<div class="container">
+  <div class="position-relative mb-5">
+    <hr class="">
+    <h2 class="text-center fw-bold brand-font position-relative">
+      <span class="position-relative px-4">Today's Global Quotes</span>
+    </h2>
+    <hr class="">
+  </div>
+</div>

@@ -321,7 +321,7 @@
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href=".">
+                        <a class="nav-link" aria-current="page" href="{% url 'userhome:mainpage' user_info.user_id 'quotes' %}">
                             <i class="fas fa-home me-1"></i> Home
                         </a>
                     </li>
@@ -353,13 +353,13 @@
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link" href="aboutUs">
+                        <a class="nav-link" href="{% url 'userhome:aboutus' user_info.user_id  %}">
                             <i class="fas fa-info-circle me-1"></i> About Us
                         </a>
                     </li>
                     
                     <li class="nav-item">
-                        <a class="nav-link" href="contactUs">
+                        <a class="nav-link" href="{% url 'userhome:contactus' user_info.user_id  %}">
                             <i class="fas fa-envelope me-1"></i> Contact us
                         </a>
                     </li>
@@ -376,7 +376,7 @@
                     </li>
                     
                     <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
-                        <a href="profile" type="button" class="btn btn-custom">
+                        <a href="{% url 'userhome:profile' user_info.user_id   %}" type="button" class="btn btn-custom">
                             <i class="fas fa-user me-1"></i> Profile
                         </a>
                     </li>
