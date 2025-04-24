@@ -1,0 +1,9 @@
+services:
+  quotes_web:
+    image: quotesapp
+    ports:
+      - "8080:8000"
+    volumes:
+      - ./quotes:/quotes
+    env_file:
+      - .env
