@@ -31,6 +31,9 @@ def aboutUs(request,user_id):
 #     # You can use user_id, username, email, first_name, last_name to personalize the content
 
 #     return render(request, 'userhome/mainpage.html', {'user_id': user_id, 'username': username, 'email': email, 'first_name': first_name, 'last_name': last_name})
+ 
+
+
 @login_required
 def userHome(request,user_id):
     user_info = get_object_or_404(UserInfo, user_id=user_id)
