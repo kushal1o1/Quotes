@@ -1,0 +1,251 @@
+{% load static %}
+
+<!-- Comments Offcanvas -->
+<div class="offcanvas offcanvas-bottom" 
+  tabindex="-1" 
+  id="comments-{{ content_type }}-{{ content_id }}" 
+  aria-labelledby="comments-label-{{ content_type }}-{{ content_id }}" 
+  style="height: 80vh; background-color: var(--bg-color);">
+  
+  <div class="container">
+    <!-- Comments header -->
+    <div class="offcanvas-header border-bottom border-secondary">
+      <h5 class="offcanvas-title text-center" id="comments-label-{{ content_type }}-{{ content_id }}">
+        <i class="fas fa-comments me-2"></i> Comments
+      </h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    
+    <!-- Comments body -->
+    <div class="offcanvas-body container">
+      <div class="comments-container" id="comments-container-{{ content_type }}-{{ content_id }}">
+        <!-- Comments will be loaded here -->
+        {% for comment in comments %}
+          <div class="comment-item">
+            <div class="d-flex align-items-center my-0">
+              <div class="me-3 my-0">
+                {% if comment.user.userinfo.profile_picture %}
+                  <img class="rounded-circle d-inline-block m-2" 
+                    src="{{ comment.user.userinfo.profile_picture.url }}" 
+                    alt="Profile picture" 
+                    width="40" height="40">
+                {% else %}
+                  <div class="rounded-circle d-inline-block m-2" style="width: 40px; height: 40px;">
+                    <i class="fas fa-user"></i>
+                  </div>
+                {% endif %}
+              </div>
+              <div class="d-flex flex-column my-0">
+                <div>
+                  <span class="text-primary my-0 d-inline-block">{{ comment.user }}</span> · 
+                  <small class="">{{ comment.likes_count }} likes</small> · 
+                  <small class="text-muted">{{ comment.posted_date|timesince }} ago</small>
+                </div>
+              </div>
+            </div>
+            <p class="fw-light lh-sm ms-5 mb-2">
+              {{ comment.text }}
+            </p>
+            <div class="d-flex align-items-center ms-5 mb-3">
+              <div class="me-4">
+                <button class="btn btn-sm btn-link p-0 text-decoration-none" onclick="likeComment('{{ content_type }}', {{ content_id }}, {{ comment.id }})">
+                  <img width="15px" src="{% static 'images/love.png' %}" alt="Like"> 
+                  <span id="comment-likes-{{ comment.id }}">{{ comment.likes_count }}</span>
+                </button>
+              </div>
+              <div>
+                <button class="btn btn-sm btn-link p-0 text-decoration-none" onclick="replyToComment('{{ content_type }}', {{ content_id }}, {{ comment.id }})">
+                  <img width="15px" src="{% static 'images/comment.jpeg' %}" alt="Reply"> 
+                  <span id="comment-replies-{{ comment.id }}">{{ comment.replies_count }}</span>
+                </button>
+              </div>
+            </div>
+            <hr class="opacity-25">
+          </div>
+        {% empty %}
+          <div class="text-center py-4">
+            <i class="fas fa-comments fa-3x mb-3 text-muted"></i>
+            <p class="text-muted">No comments yet. Be the first to comment!</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    
+    <!-- Comment input footer -->
+    <div class="offcanvas-footer sticky-bottom container p-3 border-top border-secondary">
+      <div class="input-group">
+        <div class="me-2">
+          {% if user.userinfo.profile_picture %}
+            <img class="rounded-circle d-inline-block" 
+              src="{{ user.userinfo.profile_picture.url }}" 
+              alt="Your profile" 
+              width="40" height="40">
+          {% else %}
+            <div class="rounded-circle d-inline-block" style="width: 40px; height: 40px;">
+              <i class="fas fa-user"></i>
+            </div>
+          {% endif %}
+        </div>
+        <input type="text" 
+          class="form-control" 
+          id="comment-input-{{ content_type }}-{{ content_id }}"
+          placeholder="Add your comment..." 
+          aria-label="Comment">
+        <button class="btn btn-primary" 
+          type="button" 
+          onclick="postComment('{{ content_type }}', {{ content_id }})">
+          Post
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .comments-container {
+    max-height: calc(80vh - 160px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) transparent;
+  }
+  
+  .comments-container::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  .comments-container::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+    border-radius: 10px;
+  }
+  
+  .comment-item {
+    transition: background-color 0.3s ease;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .comment-item:hover {
+    background-color: var(--hover-bg);
+  }
+  
+  .comment-item.new-comment {
+    animation: newCommentFade 0.5s ease forwards;
+  }
+  
+  @keyframes newCommentFade {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  function likeComment(contentType, contentId, commentId) {
+    // AJAX call to like the comment
+    console.log(`Liked comment ${commentId} on ${contentType} ${contentId}`);
+    const likesCount = document.getElementById(`comment-likes-${commentId}`);
+    const currentLikes = parseInt(likesCount.textContent) + 1;
+    likesCount.textContent = currentLikes;
+    showToast('Comment liked!');
+  }
+
+  function replyToComment(contentType, contentId, commentId) {
+    const input = document.getElementById(`comment-input-${contentType}-${contentId}`);
+    input.focus();
+    input.value = `@${commentId} `;
+    showToast('Reply to comment');
+  }
+
+  function postComment(contentType, contentId) {
+    const input = document.getElementById(`comment-input-${contentType}-${contentId}`);
+    const comment = input.value.trim();
+    
+    if (comment) {
+      // AJAX call to post the comment
+      console.log(`Posted comment on ${contentType} ${contentId}: ${comment}`);
+      
+      // Clear input
+      input.value = '';
+      
+      // Update UI with new comment
+      addNewComment(contentType, contentId, comment);
+      
+      // Update comment count
+      const commentsCount = document.getElementById(`comments-count-${contentType}-${contentId}`);
+      const currentComments = parseInt(commentsCount.textContent.replace(/[^0-9]/g, '')) + 1;
+      commentsCount.textContent = formatCount(currentComments);
+    }
+  }
+
+  function addNewComment(contentType, contentId, commentText) {
+    const commentsContainer = document.getElementById(`comments-container-${contentType}-${contentId}`);
+    
+    // Create new comment element
+    const newComment = document.createElement('div');
+    newComment.className = 'comment-item new-comment';
+    
+    // User info - using current user's info
+    const userProfileImg = '{% if user.userinfo.profile_picture %}{{ user.userinfo.profile_picture.url }}{% else %}{% static "images/default-avatar.png" %}{% endif %}';
+    const userName = '{{ user.username|default:"You" }}';
+    
+    // Set comment HTML
+    newComment.innerHTML = `
+      <div class="d-flex align-items-center my-0">
+        <div class="me-3 my-0">
+          <img class="rounded-circle d-inline-block m-2" 
+            src="${userProfileImg}" 
+            alt="Profile picture" 
+            width="40" height="40">
+        </div>
+        <div class="d-flex flex-column my-0">
+          <div>
+            <span class="text-primary my-0 d-inline-block">${userName}</span> · 
+            <small class="">0 likes</small> · 
+            <small class="text-muted">Just now</small>
+          </div>
+        </div>
+      </div>
+      <p class="fw-light lh-sm ms-5 mb-2">${commentText}</p>
+      <div class="d-flex align-items-center ms-5 mb-3">
+        <div class="me-4">
+          <button class="btn btn-sm btn-link p-0 text-decoration-none">
+            <img width="15px" src="{% static 'images/love.png' %}" alt="Like"> 0
+          </button>
+        </div>
+        <div>
+          <button class="btn btn-sm btn-link p-0 text-decoration-none">
+            <img width="15px" src="{% static 'images/comment.jpeg' %}" alt="Reply"> 0
+          </button>
+        </div>
+      </div>
+      <hr class="opacity-25">
+    `;
+    
+    // Add to DOM
+    commentsContainer.prepend(newComment);
+  }
+
+  function formatCount(count) {
+    if (count >= 1000000) {
+      return Math.floor(count / 1000000) + 'M';
+    } else if (count >= 1000) {
+      return Math.floor(count / 1000) + 'k';
+    }
+    return count.toString();
+  }
+
+  function showToast(message) {
+    const existingToast = document.querySelector('.toast-notification');
+    if (existingToast) {
+      existingToast.remove();
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+  }
+</script> 

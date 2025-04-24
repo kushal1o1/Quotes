@@ -108,6 +108,9 @@
             {% include 'userhome/components/interaction_buttons.html' with content_type='quote' content_id=quote.id %}
           </div>
         </div>
+        
+        <!-- Comments Section -->
+        {% include 'userhome/components/comments_section.html' with content_type='quote' content_id=quote.id comments=quote.comments.all %}
       </div>
 
       <!-- Comment Offcanvas -->
@@ -549,9 +552,7 @@
             <!-- End Comment Example -->
             
             <!-- Display actual comments here in a loop -->
-            {% for comment in video.comments.all %}
-              <!-- Individual comment rendering -->
-            {% endfor %}
+            {% include 'userhome/components/comments_section.html' with content_type='video' content_id=video.id comments=video.comments.all %}
           </div>
         </div>
       </div>
@@ -946,47 +947,7 @@
       <div class="offcanvas-body container ">
         <div class="comments-container" id="comments-container-{{ img.id }}">
           <!-- Actual comments would be loaded dynamically or from backend -->
-          {% for comment in img.comments.all|slice:":20" %}
-            <!-- Comment rendering would go here -->
-          {% empty %}
-            <!-- Example comments for template -->
-            {% for i in "1234"|make_list %}
-              <div class="comment-item">
-                <div class="d-flex align-items-center my-0">
-                  <div class="me-3 my-0">
-                    <img class="rounded-circle d-inline-block m-2" 
-                      src="{% static 'images/shadowMe.jpeg' %}" 
-                      alt="Profile picture" 
-                      width="40" height="40">
-                  </div>
-                  <div class="d-flex flex-column my-0">
-                    <div>
-                      <span class="text-primary my-0 d-inline-block">kushal1o1</span> · 
-                      <small class="">20k likes</small> · 
-                      <small class="text-muted">Nov 29, 2022</small>
-                    </div>
-                  </div>
-                </div>
-                <p class="fw-light lh-sm ms-5 mb-2">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                  Officia esse provident, illum quia error animi veritatis rem voluptas minus.
-                </p>
-                <div class="d-flex align-items-center ms-5 mb-3">
-                  <div class="me-4">
-                    <button class="btn btn-sm btn-link p-0  text-decoration-none">
-                      <img width="15px" src="{% static 'images/love.png' %}" alt="Like"> 1k
-                    </button>
-                  </div>
-                  <div>
-                    <button class="btn btn-sm btn-link p-0  text-decoration-none">
-                      <img width="15px" src="{% static 'images/comment.jpeg' %}" alt="Reply"> 4
-                    </button>
-                  </div>
-                </div>
-                <hr class=" opacity-25">
-              </div>
-            {% endfor %}
-          {% endfor %}
+          {% include 'userhome/components/comments_section.html' with content_type='image' content_id=img.id comments=img.comments.all %}
         </div>
       </div>
       
