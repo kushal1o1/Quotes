@@ -1,0 +1,441 @@
+{% load static%}
+{% for video in videos %}
+<!-- Desktop View -->
+<div class="video-container d-none d-sm-block">
+  <div class="video-wrapper my-4 d-flex justify-content-between" style="height: 100vh; overflow: hidden;">
+    <!-- Video Card -->
+    <div class="card shadow-sm  m-5">
+      <div class="container mt-5">
+        <video 
+          class="container-fluid m-5 p-0" 
+          style="max-height: 1090px;" 
+          id="video-{{ forloop.counter }}"
+          controls 
+          onmouseover="playVideo(this)" 
+          onmouseout="pauseVideo(this)">
+          <source src="{{ video.video_file.url }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+
+    <!-- Video Info Card -->
+    <div class="card-body video-info m-5 p-5">
+      <div class="d-flex flex-column">
+        <hr class="my-0">
+        <!-- Author Info -->
+        <div class="d-flex" style="font-style: oblique;">
+          <div class="d-flex align-items-center flex-grow-1">
+            <div class="me-3">
+              {% if video.user.userinfo.profile_picture %}
+                <img class="rounded-circle d-inline-block m-2" 
+                  src="{{ video.user.userinfo.profile_picture.url }}" 
+                  alt="Profile picture" 
+                  width="40" height="40">
+              {% endif %}
+            </div>
+            <div class="d-flex flex-column">
+              <div>
+                <h6 class="fw-bold d-inline-block col-10">{{ video.title }}</h6>
+              </div>
+              <div>
+                <h5 class="text-primary my-0 d-inline-block">{{ video.user }}</h5>
+                <small class="text-muted">{{ video.posted_date|date:"F d, Y" }}</small>
+              </div>
+            </div>
+          </div>
+          <!-- Options Dropdown -->
+          <div class="dropdown my-2 me-2">
+            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#"><i class="bi bi-eye-slash me-2"></i>Not interested</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-flag me-2"></i>Report</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-share me-2"></i>Share</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Video Description -->
+        <div>
+          <hr class="my-0">
+          <div class="pt-4 text-center video-description">
+            <p class="card-text " style="overflow-y: auto; width: 28vw; height: 70px;">
+              {{ video.description }}
+            </p>
+          </div>
+          <hr class="my-0">
+          <small class="text-muted ms-2" style="font-style: oblique;">
+            <span id="likes-count-{{ video.id }}">10k</span> likes · 
+            <span id="comments-count-{{ video.id }}">2k</span> comments · 
+            <span id="shares-count-{{ video.id }}">1k</span> shares
+          </small>
+          <hr class="my-0">
+          <!-- Interaction Buttons -->
+          <div class="d-flex align-items-center justify-content-around py-3">
+            {% include 'userhome/components/interaction_buttons.html' with content_type='video' content_id=video.id %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Comment Input -->
+      <hr class="m-1">
+      <div class="modal-footer sticky-bottom container">
+        <div class="input-group mb-3">
+          <div class="me-3">
+            {% if user.userinfo.profile_picture %}
+              <img class="rounded-circle d-inline-block m-2" 
+                src="{{ user.userinfo.profile_picture.url }}" 
+                alt="Your profile" 
+                width="30" height="30">
+            {% else %}
+              <div class="rounded-circle  d-inline-block m-2" style="width: 30px; height: 30px;"></div>
+            {% endif %}
+          </div>
+          <input type="text" class="form-control" id="comment-input-{{ video.id }}" 
+            placeholder="Your comment" aria-describedby="comment-button-{{ video.id }}">
+          <button class="btn btn-primary" type="button" id="comment-button-{{ video.id }}" 
+            onclick="postComment({{ video.id }})">Comment</button>
+        </div>
+      </div>
+
+      <!-- Comments Section -->
+      <hr class="my-0">
+      <div id="comments-section-{{ video.id }}" class="comments-section">
+        <div class="offcanvas-body container  p-1">
+          <div class="modal-body my-0" style="font-style: oblique;">
+            <!-- Comment Example -->
+            <div class="comment-item">
+              <div class="d-flex align-items-center my-0">
+                <div class="me-3 my-0">
+                  <img class="rounded-circle d-inline-block m-2" 
+                    src="{% static 'images/shadowMe.jpeg' %}" 
+                    alt="Profile picture" width="30" height="30">
+                </div>
+                <div class="d-flex flex-column my-0">
+                  <div>
+                    <h7 class="text-primary my-0 d-inline-block">kushal1o1</h7> · 
+                    <small>20k like</small> · 
+                    <small class="text-muted">Nov 29, 2022</small>
+                  </div>
+                </div>
+              </div>
+              <p class="fw-light lh-1 m-0"> 
+                <small style="opacity:0.8">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi repellendus magnam odit, 
+                  id eveniet, provident animi quasi doloribus iste ad quae possimus earum labore dolorem!
+                </small>
+              </p>
+              <div class="d-flex align-items-center">
+                <div class="me-5">
+                  1k <img width="15px" class="btn-outline-primary" src="{% static 'images/love.png' %}" alt="Like">
+                </div>
+                <div>
+                  4 <img width="15px" type="button" class="btn-outline-primary" src="{% static 'images/comment.jpeg' %}" alt="Reply">
+                </div>
+              </div>
+              <hr class="">
+            </div>
+            <!-- End Comment Example -->
+            
+            <!-- Display actual comments here in a loop -->
+            {% include 'userhome/components/comments_section.html' with content_type='video' content_id=video.id comments=video.comments.all %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile View -->
+<div class="video-container-mobile d-block d-sm-none">
+  <div class="video-wrapper-mobile d-flex flex-column" style="height: 100vh; overflow: hidden;">
+    <!-- Video Player -->
+    <div class="card shadow-sm ">
+      <div class="container p-0">
+        <video class="container-fluid p-0" style="height: 70vh; width: 100%;" 
+          id="mobile-video-{{ forloop.counter }}" controls>
+          <source src="{{ video.video_file.url }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+
+    <!-- Video Info - Mobile -->
+    <div class="card-body mobile-video-info">
+      <div class="d-flex flex-column">
+        <div class="d-flex flex-column" style="font-style: oblique;">
+          <div class="d-flex align-items-center">
+            <div class="me-2">
+              {% if video.user.userinfo.profile_picture %}
+                <img class="rounded-circle" 
+                  src="{{ video.user.userinfo.profile_picture.url }}" 
+                  alt="Profile" height="36" width="36">
+              {% endif %}
+            </div>
+            <div class="d-flex flex-column ms-2">
+              <h6 class="fw-bold mb-0">{{ video.title }}</h6>
+              <div>
+                <span class="text-primary">{{ video.user }}</span>
+                <small class="text-muted">· {{ video.posted_date|timesince }} ago</small>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Mobile Interaction Buttons -->
+          <div class="mobile-interactions" style="position: relative; margin-top: 10px;">
+            <small class="text-muted" style="font-style: oblique;">
+              <span id="mobile-likes-{{ video.id }}">10k</span> likes · 
+              <span id="mobile-comments-{{ video.id }}">2k</span> comments · 
+              <span id="mobile-shares-{{ video.id }}">1k</span> shares
+            </small>
+            
+            <div class="d-flex align-items-center justify-content-around py-3">
+              <button class="btn btn-interaction-mobile" onclick="likeVideo({{ video.id }})">
+                <img width="20px" src="{% static 'images/love.png' %}" alt="Like">
+                <div class="">Like</div>
+              </button>
+              <button class="btn btn-interaction-mobile" data-bs-toggle="offcanvas" 
+                data-bs-target="#mobile-comments-{{ video.id }}">
+                <img width="20px" src="{% static 'images/comment.jpeg' %}" alt="Comment">
+                <div>Comment</div>
+              </button>
+              <button class="btn btn-interaction-mobile" onclick="saveVideo({{ video.id }})">
+                <img width="22px" src="{% static 'images/save.png' %}" alt="Save">
+                <div>Save</div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Mobile Comments Off-canvas -->
+  <div class="offcanvas offcanvas-bottom" tabindex="-1" id="mobile-comments-{{ video.id }}"
+    aria-labelledby="offcanvasBottomLabel" style="height: 70vh;">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasBottomLabel">Comments ({{ video.comments.count }})</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body small">
+      <!-- Mobile Comments Content -->
+      <!-- To be populated with actual comments -->
+    </div>
+    <!-- Mobile Comment Input -->
+    <div class="offcanvas-footer p-2 border-top">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Add a comment...">
+        <button class="btn btn-primary" type="button">Post</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script>
+  // Video play/pause on hover
+  function playVideo(videoElement) {
+    videoElement.play();
+  }
+
+  function pauseVideo(videoElement) {
+    videoElement.pause();
+  }
+  
+  // Like functionality
+  function likeVideo(videoId) {
+    // Add AJAX functionality here to like the video
+    console.log(`Liked video ${videoId}`);
+    // Update like count UI
+    const likesCount = document.getElementById(`likes-count-${videoId}`);
+    const mobileLikes = document.getElementById(`mobile-likes-${videoId}`);
+    
+    // Example increment (replace with actual API response)
+    const currentLikes = parseInt(likesCount.textContent.replace(/[^0-9]/g, '')) + 1;
+    likesCount.textContent = formatCount(currentLikes);
+    if (mobileLikes) mobileLikes.textContent = formatCount(currentLikes);
+  }
+  
+  // Save video functionality
+  function saveVideo(videoId) {
+    // Add AJAX functionality here to save the video
+    console.log(`Saved video ${videoId}`);
+    // Show feedback to the user
+    showToast('Video saved to your collection');
+  }
+  
+  // Post comment functionality
+  function postComment(videoId) {
+    const commentInput = document.getElementById(`comment-input-${videoId}`);
+    const comment = commentInput.value.trim();
+    
+    if (comment) {
+      // Add AJAX functionality here to post the comment
+      console.log(`Posted comment on video ${videoId}: ${comment}`);
+      // Clear input
+      commentInput.value = '';
+      // Update comments UI (example)
+      updateCommentsUI(videoId, comment);
+    }
+  }
+  
+  // Helper function to format counts (1000 -> 1k)
+  function formatCount(count) {
+    if (count >= 1000000) {
+      return Math.floor(count / 1000000) + 'M';
+    } else if (count >= 1000) {
+      return Math.floor(count / 1000) + 'k';
+    }
+    return count.toString();
+  }
+  
+  // Example function to show toast notifications
+  function showToast(message) {
+    // Create toast element (can be replaced with your preferred notification system)
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+  }
+  
+  // Example function to update comments UI
+  function updateCommentsUI(videoId, commentText) {
+    const commentsSection = document.getElementById(`comments-section-${videoId}`);
+    // Add new comment to the top
+    // This is a simplified example - in reality you would get the data from your API
+    const newComment = document.createElement('div');
+    newComment.className = 'comment-item new-comment';
+    newComment.innerHTML = `
+      <div class="d-flex align-items-center my-0">
+        <div class="me-3 my-0">
+          <img class="rounded-circle d-inline-block m-2" 
+            src="${userProfilePicture || '{% static "images/default-avatar.png" %}'}" 
+            alt="Profile picture" width="30" height="30">
+        </div>
+        <div class="d-flex flex-column my-0">
+          <div>
+            <h7 class="text-primary my-0 d-inline-block">${userName || 'You'}</h7> · 
+            <small>0 likes</small> · 
+            <small class="text-muted">Just now</small>
+          </div>
+        </div>
+      </div>
+      <p class="fw-light lh-1 m-0"> 
+        <small style="opacity:0.8">${commentText}</small>
+      </p>
+      <div class="d-flex align-items-center">
+        <div class="me-5">
+          0 <img width="15px" class="btn-outline-primary" src="{% static 'images/love.png' %}" alt="Like">
+        </div>
+        <div>
+          0 <img width="15px" type="button" class="btn-outline-primary" src="{% static 'images/comment.jpeg' %}" alt="Reply">
+        </div>
+      </div>
+      <hr class="">
+    `;
+    commentsSection.querySelector('.offcanvas-body').prepend(newComment);
+    
+    // Update comment count
+    const commentsCount = document.getElementById(`comments-count-${videoId}`);
+    const mobileComments = document.getElementById(`mobile-comments-${videoId}`);
+    
+    const currentComments = parseInt(commentsCount.textContent.replace(/[^0-9]/g, '')) + 1;
+    commentsCount.textContent = formatCount(currentComments);
+    if (mobileComments) mobileComments.textContent = formatCount(currentComments);
+  }
+</script>
+
+<!-- Add custom CSS for better styling -->
+<style>
+  .video-description {
+    height: 70px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #6c757d transparent;
+  }
+  
+  .video-description::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  .video-description::-webkit-scrollbar-thumb {
+    background-color: #6c757d;
+    border-radius: 10px;
+  }
+  
+  .comments-section {
+    height: 510px;
+    overflow-y: auto;
+    background-color: rgb(12, 11, 11);
+    scrollbar-width: thin;
+    scrollbar-color: #6c757d transparent;
+  }
+  
+  .comments-section::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  .comments-section::-webkit-scrollbar-thumb {
+    background-color: #6c757d;
+    border-radius: 10px;
+  }
+  
+  .btn-interaction, .btn-interaction-mobile {
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    transition: transform 0.2s;
+  }
+  
+  .btn-interaction:hover, .btn-interaction-mobile:hover {
+    transform: scale(1.1);
+  }
+  
+  .comment-item {
+    margin-bottom: 15px;
+  }
+  
+  .comment-item.new-comment {
+    animation: fadeIn 0.5s;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    padding: 5px;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(40, 167, 69, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1050;
+    animation: fadeInOut 3s;
+  }
+  
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
+  }
+</style>
+{% endfor %}
+
+

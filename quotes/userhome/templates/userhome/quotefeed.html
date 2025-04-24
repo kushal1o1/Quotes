@@ -1,0 +1,222 @@
+{% load static%}
+<!-- Quote Feed Section -->
+<div class="container">
+    <div class="row">
+      {% for quote in quotes %}
+      <div class="col-lg-8 mx-auto mb-4">
+        <div class="card quote-card shadow-lg border-0 rounded-4 quote-animation">
+          <!-- User Info Header -->
+          <div class="card-header bg-transparent border-bottom border-secondary py-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="d-flex align-items-center">
+                <div class="avatar-container me-3">
+                  {% if quote.user.userinfo.profile_picture %}
+                  <img class="rounded-circle border border-2 border-accent" src="{{ quote.user.userinfo.profile_picture.url }}" alt="Profile picture" width="50" height="50">
+                  {% else %}
+                  <div class="rounded-circle  d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <i class="fas fa-user fs-4"></i>
+                  </div>
+                  {% endif %}
+                </div>
+                <div>
+                  <h5 class="mb-0 fw-bold text-accent">{{ quote.user }}</h5>
+                  <small class="text-secondary">{{ quote.posted_date }}</small>
+                </div>
+              </div>
+              
+              <div class="dropdown">
+                <button class="btn btn-sm p-0 btn-link " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fas fa-ellipsis-v fs-5"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item d-flex align-items-center" href="#"><i class="fas fa-eye-slash me-2"></i> Don't show again</a></li>
+                  <li><a class="dropdown-item d-flex align-items-center" href="#"><i class="fas fa-flag me-2"></i> Report</a></li>
+                  <li><a class="dropdown-item d-flex align-items-center" href="#"><i class="fas fa-share me-2"></i> Share quote</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Quote Content -->
+          <div class="card-body py-4">
+            <div class="quote-content position-relative">
+              <i class="fas fa-quote-left position-absolute text-secondary" style="opacity: 0.2; font-size: 2rem; left: -10px; top: -10px;"></i>
+              <div class="ps-4 pe-4">
+                <p class="fs-5 brand-font">{{ quote.quote }}</p>
+              </div>
+              <i class="fas fa-quote-right position-absolute text-secondary" style="opacity: 0.2; font-size: 2rem; right: -10px; bottom: -10px;"></i>
+            </div>
+          </div>
+          
+          <!-- Engagement Stats -->
+          <div class="card-footer bg-transparent border-top border-secondary">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <small class="text-secondary">
+                <i class="fas fa-heart me-1 text-danger"></i> 10k likes &nbsp;&bull;&nbsp; 
+                <i class="fas fa-comment me-1 text-info"></i> 2k comments &nbsp;&bull;&nbsp;
+                <i class="fas fa-share me-1 text-success"></i> 1k shares
+              </small>
+              <small class="text-secondary">
+                <i class="fas fa-bookmark"></i>
+              </small>
+            </div>
+            
+            <!-- Interaction Buttons -->
+            <div class="d-flex align-items-center justify-content-around py-3">
+              {% include 'userhome/components/interaction_buttons.html' with content_type='quote' content_id=quote.id %}
+            </div>
+          </div>
+          
+          <!-- Comments Section -->
+          {% include 'userhome/components/comments_section.html' with content_type='quote' content_id=quote.id comments=quote.comments.all %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+
+  <!-- No Quotes Message (shown if there are no quotes) -->
+{% if not quotes %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="text-center py-5">
+        <i class="fas fa-quote-right fa-5x mb-4 text-secondary"></i>
+        <h3 class=" mb-3">No quotes available</h3>
+        <p class="text-secondary mb-4">Be the first to share an inspiring quote with the community!</p>
+        <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#addquote">
+          <i class="fas fa-plus me-2"></i> Add Your First Quote
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+<style>
+    /* Additional styles for this template */
+    .hero-section {
+      position: relative;
+      background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.7)), url('{% static "images/quote-bg.jpg" %}');
+      background-size: cover;
+      background-position: center;
+      padding: 4rem 0;
+      border-radius: 15px;
+      margin: 0 1rem;
+    }
+    
+    .quote-card {
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    
+    .quote-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .comment-item {
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 15px;
+    }
+    
+    .comment-item:last-child {
+      border-bottom: none;
+    }
+    
+    .comments-container {
+      max-height: calc(70vh - 180px);
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+    
+    .comments-container::-webkit-scrollbar {
+      width: 5px;
+    }
+    
+    .comments-container::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .comments-container::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 5px;
+    }
+    
+    #back-to-top {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .avatar-container {
+      position: relative;
+    }
+    
+    .avatar-container::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background-color: #28a745;
+      border: 2px solid #000;
+      border-radius: 50%;
+      bottom: 0;
+      right: 0;
+    }
+    
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 2rem 0;
+      }
+      
+      .offcanvas {
+        height: 90vh !important;
+      }
+    }
+  </style>
+  
+<script>
+  // Show/hide back-to-top button
+  window.addEventListener('scroll', function() {
+    const backToTopButton = document.getElementById('back-to-top');
+    if (window.scrollY > 300) {
+      backToTopButton.style.display = 'flex';
+      backToTopButton.style.opacity = '1';
+    } else {
+      backToTopButton.style.opacity = '0';
+      setTimeout(() => {
+        if (window.scrollY <= 300) {
+          backToTopButton.style.display = 'none';
+        }
+      }, 300);
+    }
+  });
+  
+  // Scroll to top when back-to-top button is clicked
+  document.getElementById('back-to-top').addEventListener('click', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+  
+  // Add animation to quotes when they enter viewport
+  document.addEventListener('DOMContentLoaded', function() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+    
+    document.querySelectorAll('.quote-animation').forEach(quote => {
+      observer.observe(quote);
+    });
+  });
+</script>

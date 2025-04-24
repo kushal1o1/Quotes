@@ -151,7 +151,7 @@ def signin(request):
 
             # return render(request, "userhome/userhome.html",{'params': params})
             # return redirect('userhome:mainpage', user_id=user.id, username=user.username, email=user.email, first_name=user.first_name, last_name=user.last_name)
-            return redirect('userhome:mainpage', user_id=user.id)
+            return redirect('userhome:mainpage', user_id=user.id,content="all")
             # return redirect('userHome')
         else:
             messages.error(request, "Bad Credentials!!")

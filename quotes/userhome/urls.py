@@ -14,7 +14,7 @@ urlpatterns = [
    
     path('mainpage/<int:user_id>/profile',views.profile,name='profile'),
     # path('signout', views.signout, name='signout'),
-    path('mainpage/<int:user_id>/', views.userHome, name='mainpage'),
+    path('mainpage/<int:user_id>/<str:content>/', views.userHome, name='mainpage'),
     path('mainpage/<int:user_id>/submit_quote/', views.submit_quote, name='submit_quote'),
 
     

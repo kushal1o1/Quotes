@@ -1,0 +1,377 @@
+{% load static%}
+{% for img in imgquote %}
+<div class="image-post-container col my-4 d-flex flex-column justify-content-between">
+  <!-- Header with user info -->
+  <div class="card shadow-sm ">
+    <hr class="">
+    <div class="d-flex justify-content-between align-items-start px-3">
+      <!-- User profile section -->
+      <div class="d-flex align-items-center mb-3">
+        <div class="me-3">
+          {% if img.user.userinfo.profile_picture %}
+            <img class="rounded-circle d-inline-block m-2" 
+              src="{{ img.user.userinfo.profile_picture.url }}" 
+              alt="Profile picture" 
+              width="50" height="50">
+          {% else %}
+            <div class="rounded-circle d-inline-block m-2" style="width: 50px; height: 50px;"></div>
+          {% endif %}
+        </div>
+        <div class="d-flex flex-column">
+          <h5 class="text-primary my-0 d-inline-block">{{ img.user }}</h5>
+          <div>
+            <small class="text-muted">{{ img.posted_date|date:"F d, Y" }}</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Options dropdown -->
+      <div class="dropdown my-2">
+        <button class="btn btn-sm btn-primary dropdown-toggle" 
+          type="button" 
+          data-bs-toggle="dropdown" 
+          aria-expanded="false">
+          <i class="bi bi-three-dots"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#"><i class="bi bi-eye-slash me-2"></i>Not interested</a></li>
+          <li><a class="dropdown-item" href="#"><i class="bi bi-flag me-2"></i>Report</a></li>
+          <li><a class="dropdown-item" href="#"><i class="bi bi-share me-2"></i>Share</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image content -->
+  <div class="card-body">
+    <div class="image-container d-flex align-items-center justify-content-center">
+      <img src="{{ img.imgfile.url }}" 
+        alt="{{ img.title|default:'Image post' }}" 
+        class="post-image my-4"
+        style="max-width: 100%; max-height: 600px; object-fit: contain;">
+    </div>
+
+    <!-- Post description -->
+    {% if img.description %}
+    <div class="post-description mb-3 px-2">
+      <p class="">{{ img.description }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Engagement stats -->
+    <div class="engagement-stats px-2">
+      <small class="text-muted" style="font-style: oblique;">
+        <span id="likes-count-{{ img.id }}">10k</span> likes · 
+        <span id="comments-count-{{ img.id }}">2k</span> comments · 
+        <span id="shares-count-{{ img.id }}">1k</span> shares
+      </small>
+    </div>
+    
+    <hr class="my-2">
+    
+    <!-- Interaction buttons -->
+    <div class="d-flex align-items-center justify-content-around py-3">
+      {% include 'userhome/components/interaction_buttons.html' with content_type='image' content_id=img.id %}
+    </div>
+  </div>
+  
+  <hr class="my-0 ">
+  
+  <!-- Comments offcanvas -->
+  <div class="offcanvas offcanvas-bottom " 
+    tabindex="-1" 
+    id="comments-offcanvas-{{ img.id }}" 
+    aria-labelledby="comments-offcanvas-label-{{ img.id }}" 
+    style="height: 80vh; background-color: rgb(18, 18, 18);">
+    
+    <div class="container">
+      <!-- Comments header -->
+      <div class="offcanvas-header ">
+        <h5 class="offcanvas-title text-center" id="comments-offcanvas-label-{{ img.id }}">
+          Comments on {{ img.title|default:"this post" }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      
+      <!-- Comments body -->
+      <div class="offcanvas-body container ">
+        <div class="comments-container" id="comments-container-{{ img.id }}">
+          <!-- Actual comments would be loaded dynamically or from backend -->
+          {% include 'userhome/components/comments_section.html' with content_type='image' content_id=img.id comments=img.comments.all %}
+        </div>
+      </div>
+      
+      <!-- Comment input footer -->
+      <div class="offcanvas-footer sticky-bottom container p-3 border-top border-secondary">
+        <div class="input-group">
+          <div class="me-2">
+            {% if user.userinfo.profile_picture %}
+              <img class="rounded-circle d-inline-block" 
+                src="{{ user.userinfo.profile_picture.url }}" 
+                alt="Your profile" 
+                width="40" height="40">
+            {% else %}
+              <div class="rounded-circle d-inline-block" style="width: 40px; height: 40px;"></div>
+            {% endif %}
+          </div>
+          <input type="text" 
+            class="form-control  " 
+            id="comment-input-{{ img.id }}"
+            placeholder="Add your comment..." 
+            aria-label="Comment">
+          <button class="btn btn-primary" 
+            type="button" 
+            onclick="postComment({{ img.id }})">
+            Post
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<!-- CSS Styling -->
+<style>
+  /* Post container */
+  .image-post-container {
+    transition: all 0.3s ease;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .image-post-container .card {
+    border: none;
+    border-radius: 8px;
+  }
+  
+  /* Image styling */
+  .post-image {
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  /* Interaction buttons */
+  .interaction-btn {
+    border: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333; /* Dark text for light mode */
+  }
+  
+  .interaction-btn:hover {
+    transform: scale(1.1);
+  }
+
+  /* Icon styling for better visibility */
+  .interaction-btn img,
+  .btn-interaction img,
+  .btn-interaction-mobile img {
+    filter: brightness(0.2); /* Makes icons darker for better visibility */
+    opacity: 0.8;
+  }
+
+  .interaction-btn:hover img,
+  .btn-interaction:hover img,
+  .btn-interaction-mobile:hover img {
+    filter: brightness(0.1); /* Even darker on hover */
+    opacity: 1;
+  }
+
+  /* Comments styling */
+  .comments-container {
+    max-height: calc(80vh - 160px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #6c757d #212529;
+  }
+  
+  .comments-container::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  .comments-container::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+  }
+  
+  .comment-item {
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Animation for new comments */
+  @keyframes newCommentFade {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .new-comment {
+    animation: newCommentFade 0.5s ease forwards;
+  }
+  
+  /* Toast notification */
+  .toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(13, 110, 253, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1050;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeInOut 3s;
+  }
+  
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
+  }
+  
+  /* Media queries for responsiveness */
+  @media (max-width: 576px) {
+    .image-post-container {
+      padding: 0;
+    }
+    
+    .post-image {
+      max-height: 400px;
+    }
+    
+    .offcanvas {
+      height: 90vh !important;
+    }
+  }
+</style>
+
+<!-- JavaScript functionality -->
+<script>
+  // Like post functionality
+  function likePost(postId) {
+    // AJAX call would go here
+    console.log(`Liked post ${postId}`);
+    
+    // Update UI
+    const likesCount = document.getElementById(`likes-count-${postId}`);
+    const currentLikes = parseInt(likesCount.textContent.replace(/[^0-9]/g, '')) + 1;
+    likesCount.textContent = formatCount(currentLikes);
+    
+    // Visual feedback
+    showToast('Post liked!');
+  }
+  
+  // Save post functionality
+  function savePost(postId) {
+    // AJAX call would go here
+    console.log(`Saved post ${postId}`);
+    
+    // Visual feedback
+    showToast('Post saved to your collection');
+  }
+  
+  // Post comment functionality
+  function postComment(postId) {
+    const commentInput = document.getElementById(`comment-input-${postId}`);
+    const comment = commentInput.value.trim();
+    
+    if (comment) {
+      // AJAX call would go here
+      console.log(`Posted comment on post ${postId}: ${comment}`);
+      
+      // Clear input
+      commentInput.value = '';
+      
+      // Update UI with new comment
+      addNewComment(postId, comment);
+      
+      // Update comment count
+      const commentsCount = document.getElementById(`comments-count-${postId}`);
+      const currentComments = parseInt(commentsCount.textContent.replace(/[^0-9]/g, '')) + 1;
+      commentsCount.textContent = formatCount(currentComments);
+    }
+  }
+  
+  // Add new comment to UI
+  function addNewComment(postId, commentText) {
+    const commentsContainer = document.getElementById(`comments-container-${postId}`);
+    
+    // Create new comment element
+    const newComment = document.createElement('div');
+    newComment.className = 'comment-item new-comment';
+    
+    // User info - using current user's info or default
+    const userProfileImg = '{% if user.userinfo.profile_picture %}{{ user.userinfo.profile_picture.url }}{% else %}{% static "images/shadowMe.jpeg" %}{% endif %}';
+    const userName = '{{ user.username|default:"You" }}';
+    
+    // Set comment HTML
+    newComment.innerHTML = `
+      <div class="d-flex align-items-center my-0">
+        <div class="me-3 my-0">
+          <img class="rounded-circle d-inline-block m-2" 
+            src="${userProfileImg}" 
+            alt="Profile picture" 
+            width="40" height="40">
+        </div>
+        <div class="d-flex flex-column my-0">
+          <div>
+            <span class="text-primary my-0 d-inline-block">${userName}</span> · 
+            <small class="">0 likes</small> · 
+            <small class="text-muted">Just now</small>
+          </div>
+        </div>
+      </div>
+      <p class="fw-light lh-sm ms-5 mb-2">${commentText}</p>
+      <div class="d-flex align-items-center ms-5 mb-3">
+        <div class="me-4">
+          <button class="btn btn-sm btn-link p-0  text-decoration-none">
+            <img width="15px" src="{% static 'images/love.png' %}" alt="Like"> 0
+          </button>
+        </div>
+        <div>
+          <button class="btn btn-sm btn-link p-0  text-decoration-none">
+            <img width="15px" src="{% static 'images/comment.jpeg' %}" alt="Reply"> 0
+          </button>
+        </div>
+      </div>
+      <hr class=" opacity-25">
+    `;
+    
+    // Add to DOM
+    commentsContainer.prepend(newComment);
+  }
+  
+  // Show toast notification
+  function showToast(message) {
+    // Remove any existing toast
+    const existingToast = document.querySelector('.toast-notification');
+    if (existingToast) {
+      existingToast.remove();
+    }
+    
+    // Create new toast
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    // Auto-remove after animation completes
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+  }
+  
+  // Format large numbers (e.g. 1000 to 1k)
+  function formatCount(count) {
+    if (count >= 1000000) {
+      return Math.floor(count / 1000000) + 'M';
+    } else if (count >= 1000) {
+      return Math.floor(count / 1000) + 'k';
+    }
+    return count.toString();
+  }
+</script>
+    

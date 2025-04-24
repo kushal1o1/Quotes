@@ -35,12 +35,21 @@ def aboutUs(request,user_id):
 
 
 @login_required
-def userHome(request,user_id):
+def userHome(request,user_id,content):
     user_info = get_object_or_404(UserInfo, user_id=user_id)
     alluser_info=UserInfo.objects.all()
-    videos = Video.objects.all().order_by('-posted_date')
-    allquotes = Quote.objects.all().order_by('-posted_date')
-    allimg = ImagePost.objects.all().order_by('-posted_date')
+    if content == 'videos':
+        videos = Video.objects.all().order_by('-posted_date')
+        allquotes = None
+        allimg = None
+    elif content == 'quotes':
+        allquotes = Quote.objects.all().order_by('-posted_date')
+    elif content == 'imgquote':
+        allimg = ImagePost.objects.all().order_by('-posted_date')
+    else:
+        allimg = ImagePost.objects.all().order_by('-posted_date')
+        videos = Video.objects.all().order_by('-posted_date')
+        allquotes = Quote.objects.all().order_by('-posted_date')
 
 
     
